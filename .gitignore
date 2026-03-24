@@ -1,0 +1,58 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.DotSettings.user
+
+# Node
+node_modules/
+.npm
+npm-debug.log*
+
+# Frontend builds
+frontend/backoffice/dist/
+frontend/ecommerce/.next/
+frontend/ecommerce/out/
+
+# Expo / React Native
+frontend/pos/.expo/
+frontend/pos/ios/
+frontend/pos/android/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Environment
+.env
+.env.local
+.env.*.local
+appsettings.Development.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.pfx
+*.pem
+
+# Test results
+TestResults/
+coverage/
+
+# Misc
+*.log

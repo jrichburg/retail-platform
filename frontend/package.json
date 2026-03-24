@@ -1,0 +1,21 @@
+{
+  "name": "retail-platform-frontend",
+  "private": true,
+  "workspaces": [
+    "shared-types",
+    "shared-web-ui",
+    "shared-native-ui",
+    "backoffice",
+    "ecommerce",
+    "pos"
+  ],
+  "scripts": {
+    "dev:backoffice": "npm run dev --workspace=backoffice",
+    "dev:ecommerce": "npm run dev --workspace=ecommerce",
+    "dev:pos": "npm run start --workspace=pos",
+    "build:backoffice": "npm run build --workspace=backoffice",
+    "build:ecommerce": "npm run build --workspace=ecommerce",
+    "lint": "npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}
