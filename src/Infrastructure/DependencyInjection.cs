@@ -1,5 +1,6 @@
 using Infrastructure.Persistence;
 using Infrastructure.Services;
+using Infrastructure.Services.Payments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,6 +40,9 @@ public static class DependencyInjection
         services.AddHttpContextAccessor();
         services.AddScoped<ITenantContext, TenantContext>();
         services.AddScoped<ICurrentUser, CurrentUser>();
+
+        // Payment service
+        services.AddHttpClient<IPaymentService, FullsteamPaymentService>();
 
         return services;
     }

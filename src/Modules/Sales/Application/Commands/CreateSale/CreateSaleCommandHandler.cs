@@ -18,13 +18,15 @@ public class CreateSaleCommandHandler : ICommandHandler<CreateSaleCommand, SaleD
     private readonly IMediator _mediator;
     private readonly ITenantContext _tenantContext;
     private readonly ICurrentUser _currentUser;
+    private readonly IPaymentService _paymentService;
 
-    public CreateSaleCommandHandler(AppDbContext db, IMediator mediator, ITenantContext tenantContext, ICurrentUser currentUser)
+    public CreateSaleCommandHandler(AppDbContext db, IMediator mediator, ITenantContext tenantContext, ICurrentUser currentUser, IPaymentService paymentService)
     {
         _db = db;
         _mediator = mediator;
         _tenantContext = tenantContext;
         _currentUser = currentUser;
+        _paymentService = paymentService;
     }
 
     public async Task<Result<SaleDto>> Handle(CreateSaleCommand request, CancellationToken cancellationToken)
@@ -101,6 +103,26 @@ public class CreateSaleCommandHandler : ICommandHandler<CreateSaleCommand, SaleD
         if (tenderedAmount < totalAmount)
             return Result.Failure<SaleDto>($"Tendered amount ({tenderedAmount:C}) is less than total ({totalAmount:C}).");
 
+        // Process card payments via Fullsteam
+        var cardTenders = request.Tenders.Where(t => t.TenderType == "card").ToList();
+        var paymentResults = new Dictionary<int, PaymentResult>();
+        for (int i = 0; i < request.Tenders.Count; i++)
+        {
+            if (request.Tenders[i].TenderType != "card") continue;
+
+            var paymentResult = await _paymentService.AuthorizeAsync(new PaymentRequest
+            {
+                Amount = request.Tenders[i].Amount,
+                Currency = "USD",
+                IdempotencyKey = $"{request.ClientTransactionId ?? Guid.NewGuid()}-tender-{i}",
+            }, cancellationToken);
+
+            if (!paymentResult.IsSuccess)
+                return Result.Failure<SaleDto>($"Card payment declined: {paymentResult.ErrorMessage}");
+
+            paymentResults[i] = paymentResult;
+        }
+
         // Generate transaction number
         var today = DateTime.UtcNow.Date;
         var store = await _db.Set<TenantNode>()
@@ -137,14 +159,23 @@ public class CreateSaleCommandHandler : ICommandHandler<CreateSaleCommand, SaleD
             sale.LineItems.Add(li);
         }
 
-        foreach (var tender in request.Tenders)
+        for (int i = 0; i < request.Tenders.Count; i++)
         {
-            sale.Tenders.Add(new SaleTender
+            var tender = request.Tenders[i];
+            var saleTender = new SaleTender
             {
                 SaleId = sale.Id,
                 TenderType = tender.TenderType,
                 Amount = tender.Amount,
-            });
+            };
+
+            if (paymentResults.TryGetValue(i, out var pr))
+            {
+                saleTender.PaymentReference = pr.ApprovalCode;
+                saleTender.PaymentDetails = JsonSerializer.Serialize(new { pr.Last4, pr.CardType, pr.ProcessorResponse });
+            }
+
+            sale.Tenders.Add(saleTender);
         }
 
         _db.Set<Sale>().Add(sale);

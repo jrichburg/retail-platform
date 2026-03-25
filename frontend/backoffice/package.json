@@ -11,12 +11,19 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@retail-platform/shared-types": "*",
+    "@supabase/supabase-js": "^2.100.0",
     "@tanstack/react-query": "^5.50.0",
+    "axios": "^1.13.6",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.6.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "react-hook-form": "^7.52.0",
     "react-router-dom": "^6.24.0",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.5.0",
     "zustand": "^4.5.0"
   },
   "devDependencies": {
