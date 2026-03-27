@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CreateProductSchema, type CreateProductRequest } from '@retail-platform/shared-types';
 import { useProduct, useCreateProduct, useUpdateProduct } from '@/hooks/use-products';
 import { useDepartments } from '@/hooks/use-departments';
+import { ArrowLeft } from 'lucide-react';
 
 export function ProductFormPage() {
   const { id } = useParams();
@@ -36,54 +37,79 @@ export function ProductFormPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <h2 className="text-xl font-semibold text-gray-900">{isEdit ? 'Edit Product' : 'New Product'}</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 rounded-lg border border-gray-200 bg-white p-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Name</label>
-            <input {...register('name')} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
-            {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>}
+      <div>
+        <button onClick={() => navigate('/catalog/products')} className="btn-ghost !px-0 mb-4 text-slate-500 hover:text-slate-700">
+          <ArrowLeft className="h-4 w-4" /> Back to products
+        </button>
+        <h1 className="page-title">{isEdit ? 'Edit product' : 'New product'}</h1>
+        <p className="mt-1 text-sm text-slate-500">{isEdit ? 'Update product details' : 'Add a new product to your catalog'}</p>
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div className="card p-6 space-y-5">
+          <h3 className="section-label">Basic Information</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">Name</label>
+              <input {...register('name')} className="input-field" placeholder="Brooks Ghost 16" />
+              {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>}
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">SKU</label>
+              <input {...register('sku')} className="input-field font-mono" placeholder="BRK-GH16-BLK-10" />
+              {errors.sku && <p className="mt-1 text-xs text-red-600">{errors.sku.message}</p>}
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">SKU</label>
-            <input {...register('sku')} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
-            {errors.sku && <p className="mt-1 text-xs text-red-600">{errors.sku.message}</p>}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">UPC / Barcode</label>
+              <input {...register('upc')} className="input-field font-mono" placeholder="190340123456" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">Category</label>
+              <select {...register('categoryId')} className="input-field">
+                <option value="">Select category...</option>
+                {allCategories.map(c => <option key={c.id} value={c.id}>{c.departmentName} / {c.name}</option>)}
+              </select>
+              {errors.categoryId && <p className="mt-1 text-xs text-red-600">{errors.categoryId.message}</p>}
+            </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">UPC</label>
-            <input {...register('upc')} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Category</label>
-            <select {...register('categoryId')} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
-              <option value="">Select...</option>
-              {allCategories.map(c => <option key={c.id} value={c.id}>{c.departmentName} &gt; {c.name}</option>)}
-            </select>
-            {errors.categoryId && <p className="mt-1 text-xs text-red-600">{errors.categoryId.message}</p>}
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Retail Price</label>
-            <input type="number" step="0.01" {...register('retailPrice', { valueAsNumber: true })} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
-            {errors.retailPrice && <p className="mt-1 text-xs text-red-600">{errors.retailPrice.message}</p>}
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Cost Price</label>
-            <input type="number" step="0.01" {...register('costPrice', { valueAsNumber: true })} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
+
+        <div className="card p-6 space-y-5">
+          <h3 className="section-label">Pricing</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">Retail Price</label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400">$</span>
+                <input type="number" step="0.01" {...register('retailPrice', { valueAsNumber: true })} className="input-field !pl-7 tabular-nums" placeholder="0.00" />
+              </div>
+              {errors.retailPrice && <p className="mt-1 text-xs text-red-600">{errors.retailPrice.message}</p>}
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">Cost Price</label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400">$</span>
+                <input type="number" step="0.01" {...register('costPrice', { valueAsNumber: true })} className="input-field !pl-7 tabular-nums" placeholder="0.00" />
+              </div>
+            </div>
           </div>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Description</label>
-          <textarea {...register('description')} rows={3} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
+
+        <div className="card p-6 space-y-5">
+          <h3 className="section-label">Details</h3>
+          <div>
+            <label className="mb-1.5 block text-sm font-medium text-slate-700">Description</label>
+            <textarea {...register('description')} rows={3} className="input-field resize-none" placeholder="Optional product description..." />
+          </div>
         </div>
-        <div className="flex gap-3 pt-2">
-          <button type="submit" disabled={isSubmitting} className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50">
-            {isSubmitting ? 'Saving...' : isEdit ? 'Update' : 'Create'}
+
+        <div className="flex items-center justify-end gap-3 pt-2">
+          <button type="button" onClick={() => navigate('/catalog/products')} className="btn-secondary">Cancel</button>
+          <button type="submit" disabled={isSubmitting} className="btn-primary">
+            {isSubmitting ? 'Saving...' : isEdit ? 'Update product' : 'Create product'}
           </button>
-          <button type="button" onClick={() => navigate('/catalog/products')} className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
         </div>
       </form>
     </div>
