@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { supabase } from '@/lib/supabase';
-import api from '@/lib/api';
+import api, { isDemo } from '@/lib/api';
+import { demoUser } from '@/lib/demo-data';
 
 interface AuthUser {
   id: string;
@@ -29,23 +30,35 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
 
   login: async (email, password) => {
+    if (isDemo) {
+      set({ user: demoUser, isAuthenticated: true, isLoading: false });
+      return;
+    }
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
   },
 
   logout: async () => {
-    await supabase.auth.signOut();
+    if (!isDemo) await supabase.auth.signOut();
     localStorage.removeItem('tenantNodeId');
     set({ user: null, isAuthenticated: false });
   },
 
   syncUser: async (tenantNodeId, rootTenantId) => {
+    if (isDemo) {
+      set({ user: demoUser, isAuthenticated: true, isLoading: false });
+      return;
+    }
     const { data } = await api.post('/auth/sync', { tenantNodeId, rootTenantId });
     localStorage.setItem('tenantNodeId', data.tenantNodeId);
     set({ user: data, isAuthenticated: true, isLoading: false });
   },
 
   loadUser: async () => {
+    if (isDemo) {
+      set({ user: demoUser, isAuthenticated: true, isLoading: false });
+      return;
+    }
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import api from '@/lib/api';
+import api, { isDemo } from '@/lib/api';
+import { demoTenantNodes } from '@/lib/demo-data';
 
 interface TenantNode {
   id: string;
@@ -27,6 +28,10 @@ export const useTenantStore = create<TenantState>((set, get) => ({
   currentStoreId: null,
 
   loadTree: async () => {
+    if (isDemo) {
+      set({ nodes: demoTenantNodes, currentStoreId: demoTenantNodes[1].id });
+      return;
+    }
     const { data } = await api.get('/tenants/tree');
     set({ nodes: data });
   },

@@ -1,11 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api from '@/lib/api';
+import api, { isDemo } from '@/lib/api';
+import { demoDepartments } from '@/lib/demo-data';
 import type { Department } from '@retail-platform/shared-types';
 
 export function useDepartments() {
   return useQuery({
     queryKey: ['departments'],
     queryFn: async () => {
+      if (isDemo) return demoDepartments as Department[];
       const { data } = await api.get('/catalog/departments');
       return data as Department[];
     },

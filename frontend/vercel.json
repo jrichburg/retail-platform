@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm run build:backoffice",
+  "outputDirectory": "backoffice/dist",
+  "installCommand": "npm install",
+  "framework": null,
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}

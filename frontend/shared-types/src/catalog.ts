@@ -19,11 +19,11 @@ export type Product = z.infer<typeof ProductSchema>;
 export const CreateProductSchema = z.object({
   name: z.string().min(1, 'Name is required').max(200),
   sku: z.string().min(1, 'SKU is required').max(50),
-  upc: z.string().max(50).optional(),
+  upc: z.string().max(50).nullish(),
   categoryId: z.string().uuid('Select a category'),
   retailPrice: z.number().positive('Price must be positive'),
-  costPrice: z.number().nonnegative().optional(),
-  description: z.string().max(1000).optional(),
+  costPrice: z.number().nonnegative().nullish(),
+  description: z.string().max(1000).nullish(),
 });
 
 export type CreateProductRequest = z.infer<typeof CreateProductSchema>;
