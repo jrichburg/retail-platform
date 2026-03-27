@@ -136,9 +136,15 @@ export function ProductFormPage() {
               </select>
             </div>
           </div>
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700">Color</label>
-            <input {...register('color')} className="input-field max-w-xs" placeholder="Black" />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">Style</label>
+              <input {...register('style')} className="input-field" placeholder="Ghost 16" />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-slate-700">Color</label>
+              <input {...register('color')} className="input-field" placeholder="Black" />
+            </div>
           </div>
         </div>
 

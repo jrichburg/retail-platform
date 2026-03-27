@@ -7,6 +7,7 @@ public record CreateProductCommand(
     string Sku,
     Guid CategoryId,
     Guid? SupplierId,
+    string? Style,
     string? Color,
     DateTime? MapDate,
     Guid? SizeGridId,

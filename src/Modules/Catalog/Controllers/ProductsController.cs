@@ -48,7 +48,7 @@ public class ProductsController : ControllerBase
         var variants = request.Variants?.Select(v => new ProductVariantInput(v.Dimension1Value, v.Dimension2Value, v.Upc)).ToList();
         var result = await _mediator.Send(new CreateProductCommand(
             request.Name, request.Sku, request.CategoryId, request.SupplierId,
-            request.Color, request.MapDate, request.SizeGridId,
+            request.Style, request.Color, request.MapDate, request.SizeGridId,
             request.RetailPrice, request.CostPrice, request.Description, variants));
         return result.IsSuccess ? Created($"/api/v1/catalog/products/{result.Value}", new { id = result.Value }) : BadRequest(new { message = result.Error });
     }
@@ -59,7 +59,7 @@ public class ProductsController : ControllerBase
         var variants = request.Variants?.Select(v => new ProductVariantInput(v.Dimension1Value, v.Dimension2Value, v.Upc)).ToList();
         var result = await _mediator.Send(new UpdateProductCommand(
             id, request.Name, request.Sku, request.CategoryId, request.SupplierId,
-            request.Color, request.MapDate, request.SizeGridId,
+            request.Style, request.Color, request.MapDate, request.SizeGridId,
             request.RetailPrice, request.CostPrice, request.Description, request.IsActive, variants));
         return result.IsSuccess ? NoContent() : BadRequest(new { message = result.Error });
     }
@@ -71,6 +71,7 @@ public class CreateProductRequest
     public string Sku { get; set; } = string.Empty;
     public Guid CategoryId { get; set; }
     public Guid? SupplierId { get; set; }
+    public string? Style { get; set; }
     public string? Color { get; set; }
     public DateTime? MapDate { get; set; }
     public Guid? SizeGridId { get; set; }
@@ -86,6 +87,7 @@ public class UpdateProductRequest
     public string Sku { get; set; } = string.Empty;
     public Guid CategoryId { get; set; }
     public Guid? SupplierId { get; set; }
+    public string? Style { get; set; }
     public string? Color { get; set; }
     public DateTime? MapDate { get; set; }
     public Guid? SizeGridId { get; set; }

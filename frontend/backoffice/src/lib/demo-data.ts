@@ -26,44 +26,29 @@ export const demoSuppliers = [
 
 export const demoSizeGrids = [
   {
-    id: 'sg1', name: "Men's US Running 7-14", dimension1Label: 'Size', dimension2Label: 'Width', isActive: true,
+    id: 'sg1', name: 'US Footwear 5-14', dimension1Label: 'Size', dimension2Label: 'Width', isActive: true,
     values: [
-      { id: 'sgv1', dimension: 1, value: '7', sortOrder: 1 },
-      { id: 'sgv2', dimension: 1, value: '7.5', sortOrder: 2 },
-      { id: 'sgv3', dimension: 1, value: '8', sortOrder: 3 },
-      { id: 'sgv4', dimension: 1, value: '8.5', sortOrder: 4 },
-      { id: 'sgv5', dimension: 1, value: '9', sortOrder: 5 },
-      { id: 'sgv6', dimension: 1, value: '9.5', sortOrder: 6 },
-      { id: 'sgv7', dimension: 1, value: '10', sortOrder: 7 },
-      { id: 'sgv8', dimension: 1, value: '10.5', sortOrder: 8 },
-      { id: 'sgv9', dimension: 1, value: '11', sortOrder: 9 },
-      { id: 'sgv10', dimension: 1, value: '11.5', sortOrder: 10 },
-      { id: 'sgv11', dimension: 1, value: '12', sortOrder: 11 },
-      { id: 'sgv12', dimension: 1, value: '13', sortOrder: 12 },
-      { id: 'sgv13', dimension: 1, value: '14', sortOrder: 13 },
-      { id: 'sgv14', dimension: 2, value: 'D', sortOrder: 1 },
-      { id: 'sgv15', dimension: 2, value: '2E', sortOrder: 2 },
-      { id: 'sgv16', dimension: 2, value: '4E', sortOrder: 3 },
-    ],
-  },
-  {
-    id: 'sg2', name: "Women's US Running 5-12", dimension1Label: 'Size', dimension2Label: 'Width', isActive: true,
-    values: [
-      { id: 'sgv20', dimension: 1, value: '5', sortOrder: 1 },
-      { id: 'sgv21', dimension: 1, value: '5.5', sortOrder: 2 },
-      { id: 'sgv22', dimension: 1, value: '6', sortOrder: 3 },
-      { id: 'sgv23', dimension: 1, value: '6.5', sortOrder: 4 },
-      { id: 'sgv24', dimension: 1, value: '7', sortOrder: 5 },
-      { id: 'sgv25', dimension: 1, value: '7.5', sortOrder: 6 },
-      { id: 'sgv26', dimension: 1, value: '8', sortOrder: 7 },
-      { id: 'sgv27', dimension: 1, value: '8.5', sortOrder: 8 },
-      { id: 'sgv28', dimension: 1, value: '9', sortOrder: 9 },
-      { id: 'sgv29', dimension: 1, value: '9.5', sortOrder: 10 },
-      { id: 'sgv30', dimension: 1, value: '10', sortOrder: 11 },
-      { id: 'sgv31', dimension: 1, value: '11', sortOrder: 12 },
-      { id: 'sgv32', dimension: 1, value: '12', sortOrder: 13 },
-      { id: 'sgv33', dimension: 2, value: 'B', sortOrder: 1 },
-      { id: 'sgv34', dimension: 2, value: 'D', sortOrder: 2 },
+      { id: 'sgv1', dimension: 1, value: '5', sortOrder: 1 },
+      { id: 'sgv2', dimension: 1, value: '5.5', sortOrder: 2 },
+      { id: 'sgv3', dimension: 1, value: '6', sortOrder: 3 },
+      { id: 'sgv4', dimension: 1, value: '6.5', sortOrder: 4 },
+      { id: 'sgv5', dimension: 1, value: '7', sortOrder: 5 },
+      { id: 'sgv6', dimension: 1, value: '7.5', sortOrder: 6 },
+      { id: 'sgv7', dimension: 1, value: '8', sortOrder: 7 },
+      { id: 'sgv8', dimension: 1, value: '8.5', sortOrder: 8 },
+      { id: 'sgv9', dimension: 1, value: '9', sortOrder: 9 },
+      { id: 'sgv10', dimension: 1, value: '9.5', sortOrder: 10 },
+      { id: 'sgv11', dimension: 1, value: '10', sortOrder: 11 },
+      { id: 'sgv12', dimension: 1, value: '10.5', sortOrder: 12 },
+      { id: 'sgv13', dimension: 1, value: '11', sortOrder: 13 },
+      { id: 'sgv14', dimension: 1, value: '11.5', sortOrder: 14 },
+      { id: 'sgv15', dimension: 1, value: '12', sortOrder: 15 },
+      { id: 'sgv16', dimension: 1, value: '13', sortOrder: 16 },
+      { id: 'sgv17', dimension: 1, value: '14', sortOrder: 17 },
+      { id: 'sgv18', dimension: 2, value: 'B', sortOrder: 1 },
+      { id: 'sgv19', dimension: 2, value: 'D', sortOrder: 2 },
+      { id: 'sgv20', dimension: 2, value: '2E', sortOrder: 3 },
+      { id: 'sgv21', dimension: 2, value: '4E', sortOrder: 4 },
     ],
   },
   {
@@ -104,30 +89,30 @@ export const demoDepartments = [
 
 export const demoProducts = {
   items: [
-    { id: 'p1', name: 'Brooks Ghost 16', sku: 'BRK-GH16-BLK', upc: null, categoryId: 'c1', categoryName: 'Running', departmentName: "Men's Footwear", supplierId: 'sup1', supplierName: 'Brooks', color: 'Black', mapDate: null, sizeGridId: 'sg1', sizeGridName: "Men's US Running 7-14", retailPrice: 139.99, costPrice: 70.00, description: null, isActive: true, variantCount: 3, variants: [
+    { id: 'p1', name: 'Brooks Ghost 16', sku: 'BRK-GH16-BLK', upc: null, categoryId: 'c1', categoryName: 'Running', departmentName: "Men's Footwear", supplierId: 'sup1', supplierName: 'Brooks', style: 'Ghost 16', color: 'Black', mapDate: null, sizeGridId: 'sg1', sizeGridName: 'US Footwear 5-14', retailPrice: 139.99, costPrice: 70.00, description: null, isActive: true, variantCount: 3, variants: [
       { id: 'v1', dimension1Value: '10', dimension2Value: 'D', upc: '190340123456', isActive: true },
       { id: 'v2', dimension1Value: '10.5', dimension2Value: 'D', upc: '190340123457', isActive: true },
       { id: 'v3', dimension1Value: '11', dimension2Value: 'D', upc: '190340123458', isActive: true },
     ] },
-    { id: 'p2', name: 'New Balance 990v6', sku: 'NB-990V6-GRY', upc: null, categoryId: 'c1', categoryName: 'Running', departmentName: "Men's Footwear", supplierId: 'sup4', supplierName: 'New Balance', color: 'Grey', mapDate: '2026-06-01', sizeGridId: 'sg1', sizeGridName: "Men's US Running 7-14", retailPrice: 199.99, costPrice: 100.00, description: null, isActive: true, variantCount: 2, variants: [
+    { id: 'p2', name: 'New Balance 990v6', sku: 'NB-990V6-GRY', upc: null, categoryId: 'c1', categoryName: 'Running', departmentName: "Men's Footwear", supplierId: 'sup4', supplierName: 'New Balance', style: '990v6', color: 'Grey', mapDate: '2026-06-01', sizeGridId: 'sg1', sizeGridName: 'US Footwear 5-14', retailPrice: 199.99, costPrice: 100.00, description: null, isActive: true, variantCount: 2, variants: [
       { id: 'v4', dimension1Value: '10', dimension2Value: 'D', upc: '194768234567', isActive: true },
       { id: 'v5', dimension1Value: '10', dimension2Value: '2E', upc: '194768234568', isActive: true },
     ] },
-    { id: 'p3', name: 'ASICS Gel-Kayano 30', sku: 'ASC-KAY30-BLK', upc: null, categoryId: 'c1', categoryName: 'Running', departmentName: "Men's Footwear", supplierId: 'sup3', supplierName: 'ASICS', color: 'Black', mapDate: null, sizeGridId: 'sg1', sizeGridName: "Men's US Running 7-14", retailPrice: 159.99, costPrice: 80.00, description: null, isActive: true, variantCount: 1, variants: [
+    { id: 'p3', name: 'ASICS Gel-Kayano 30', sku: 'ASC-KAY30-BLK', upc: null, categoryId: 'c1', categoryName: 'Running', departmentName: "Men's Footwear", supplierId: 'sup3', supplierName: 'ASICS', style: 'Gel-Kayano 30', color: 'Black', mapDate: null, sizeGridId: 'sg1', sizeGridName: 'US Footwear 5-14', retailPrice: 159.99, costPrice: 80.00, description: null, isActive: true, variantCount: 1, variants: [
       { id: 'v6', dimension1Value: '9', dimension2Value: 'D', upc: '168987654321', isActive: true },
     ] },
-    { id: 'p4', name: 'Hey Dude Wally', sku: 'HD-WALLY-TAN', upc: null, categoryId: 'c2', categoryName: 'Casual', departmentName: "Men's Footwear", supplierId: 'sup5', supplierName: 'Hey Dude', color: 'Tan', mapDate: null, sizeGridId: null, sizeGridName: null, retailPrice: 59.99, costPrice: 30.00, description: null, isActive: true, variantCount: 0, variants: null },
-    { id: 'p5', name: 'Birkenstock Arizona', sku: 'BRK-ARIZ-BRN', upc: null, categoryId: 'c2', categoryName: 'Casual', departmentName: "Men's Footwear", supplierId: 'sup6', supplierName: 'Birkenstock', color: 'Brown', mapDate: null, sizeGridId: null, sizeGridName: null, retailPrice: 109.99, costPrice: 55.00, description: null, isActive: true, variantCount: 0, variants: null },
-    { id: 'p6', name: 'Brooks Glycerin 21 W', sku: 'BRK-GLY21W-PNK', upc: null, categoryId: 'c3', categoryName: 'Running', departmentName: "Women's Footwear", supplierId: 'sup1', supplierName: 'Brooks', color: 'Pink', mapDate: null, sizeGridId: 'sg2', sizeGridName: "Women's US Running 5-12", retailPrice: 159.99, costPrice: 80.00, description: null, isActive: true, variantCount: 2, variants: [
+    { id: 'p4', name: 'Hey Dude Wally', sku: 'HD-WALLY-TAN', upc: null, categoryId: 'c2', categoryName: 'Casual', departmentName: "Men's Footwear", supplierId: 'sup5', supplierName: 'Hey Dude', style: 'Wally', color: 'Tan', mapDate: null, sizeGridId: null, sizeGridName: null, retailPrice: 59.99, costPrice: 30.00, description: null, isActive: true, variantCount: 0, variants: null },
+    { id: 'p5', name: 'Birkenstock Arizona', sku: 'BRK-ARIZ-BRN', upc: null, categoryId: 'c2', categoryName: 'Casual', departmentName: "Men's Footwear", supplierId: 'sup6', supplierName: 'Birkenstock', style: 'Arizona', color: 'Brown', mapDate: null, sizeGridId: null, sizeGridName: null, retailPrice: 109.99, costPrice: 55.00, description: null, isActive: true, variantCount: 0, variants: null },
+    { id: 'p6', name: 'Brooks Glycerin 21 W', sku: 'BRK-GLY21W-PNK', upc: null, categoryId: 'c3', categoryName: 'Running', departmentName: "Women's Footwear", supplierId: 'sup1', supplierName: 'Brooks', style: 'Glycerin 21', color: 'Pink', mapDate: null, sizeGridId: 'sg1', sizeGridName: 'US Footwear 5-14', retailPrice: 159.99, costPrice: 80.00, description: null, isActive: true, variantCount: 2, variants: [
       { id: 'v7', dimension1Value: '8', dimension2Value: 'B', upc: '190340234567', isActive: true },
       { id: 'v8', dimension1Value: '8', dimension2Value: 'D', upc: '190340234568', isActive: true },
     ] },
-    { id: 'p7', name: 'Nike Dri-FIT Tee', sku: 'NK-DRFT-BLK', upc: null, categoryId: 'c4', categoryName: 'Tops', departmentName: 'Apparel', supplierId: 'sup2', supplierName: 'Nike', color: 'Black', mapDate: null, sizeGridId: 'sg3', sizeGridName: 'Apparel S-3XL', retailPrice: 34.99, costPrice: 17.50, description: null, isActive: true, variantCount: 3, variants: [
+    { id: 'p7', name: 'Nike Dri-FIT Tee', sku: 'NK-DRFT-BLK', upc: null, categoryId: 'c4', categoryName: 'Tops', departmentName: 'Apparel', supplierId: 'sup2', supplierName: 'Nike', style: 'Dri-FIT Tee', color: 'Black', mapDate: null, sizeGridId: 'sg3', sizeGridName: 'Apparel S-3XL', retailPrice: 34.99, costPrice: 17.50, description: null, isActive: true, variantCount: 3, variants: [
       { id: 'v9', dimension1Value: 'S', dimension2Value: null, upc: '195230123456', isActive: true },
       { id: 'v10', dimension1Value: 'M', dimension2Value: null, upc: '195230123457', isActive: true },
       { id: 'v11', dimension1Value: 'L', dimension2Value: null, upc: '195230123458', isActive: true },
     ] },
-    { id: 'p8', name: 'Nike Tempo Short', sku: 'NK-TMPO-BLK', upc: null, categoryId: 'c5', categoryName: 'Bottoms', departmentName: 'Apparel', supplierId: 'sup2', supplierName: 'Nike', color: 'Black', mapDate: null, sizeGridId: 'sg3', sizeGridName: 'Apparel S-3XL', retailPrice: 39.99, costPrice: 20.00, description: null, isActive: true, variantCount: 2, variants: [
+    { id: 'p8', name: 'Nike Tempo Short', sku: 'NK-TMPO-BLK', upc: null, categoryId: 'c5', categoryName: 'Bottoms', departmentName: 'Apparel', supplierId: 'sup2', supplierName: 'Nike', style: 'Tempo Short', color: 'Black', mapDate: null, sizeGridId: 'sg3', sizeGridName: 'Apparel S-3XL', retailPrice: 39.99, costPrice: 20.00, description: null, isActive: true, variantCount: 2, variants: [
       { id: 'v12', dimension1Value: 'M', dimension2Value: null, upc: '195230234567', isActive: true },
       { id: 'v13', dimension1Value: 'L', dimension2Value: null, upc: '195230234568', isActive: true },
     ] },

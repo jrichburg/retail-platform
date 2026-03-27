@@ -18,6 +18,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(x => x.Sku).HasColumnName("sku").IsRequired().HasMaxLength(50);
         builder.Property(x => x.CategoryId).HasColumnName("category_id").IsRequired();
         builder.Property(x => x.SupplierId).HasColumnName("supplier_id");
+        builder.Property(x => x.Style).HasColumnName("style").HasMaxLength(100);
         builder.Property(x => x.Color).HasColumnName("color").HasMaxLength(50);
         builder.Property(x => x.MapDate).HasColumnName("map_date");
         builder.Property(x => x.SizeGridId).HasColumnName("size_grid_id");

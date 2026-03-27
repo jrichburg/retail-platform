@@ -56,6 +56,7 @@ public class GetProductsQueryHandler : IQueryHandler<GetProductsQuery, PagedResu
                 DepartmentName = p.Category.Department.Name,
                 SupplierId = p.SupplierId,
                 SupplierName = p.Supplier != null ? p.Supplier.Name : null,
+                Style = p.Style,
                 Color = p.Color,
                 MapDate = p.MapDate,
                 SizeGridId = p.SizeGridId,

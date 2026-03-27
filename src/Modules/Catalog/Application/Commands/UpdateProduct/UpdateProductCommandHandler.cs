@@ -37,6 +37,7 @@ public class UpdateProductCommandHandler : ICommandHandler<UpdateProductCommand>
         product.Sku = request.Sku;
         product.CategoryId = request.CategoryId;
         product.SupplierId = request.SupplierId;
+        product.Style = request.Style;
         product.Color = request.Color;
         product.MapDate = request.MapDate;
         product.SizeGridId = request.SizeGridId;

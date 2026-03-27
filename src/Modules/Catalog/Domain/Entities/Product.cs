@@ -8,6 +8,7 @@ public class Product : TenantScopedEntity, IAuditableEntity
     public string Sku { get; set; } = string.Empty;
     public Guid CategoryId { get; set; }
     public Guid? SupplierId { get; set; }
+    public string? Style { get; set; }
     public string? Color { get; set; }
     public DateTime? MapDate { get; set; }
     public Guid? SizeGridId { get; set; }
