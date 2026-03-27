@@ -38,7 +38,7 @@ public class SalesController : ControllerBase
     public async Task<IActionResult> CreateSale([FromBody] CreateSaleRequest request)
     {
         var command = new CreateSaleCommand(
-            Items: request.Items.Select(i => new SaleItemInput(i.ProductId, i.Quantity)).ToList(),
+            Items: request.Items.Select(i => new SaleItemInput(i.ProductId, i.ProductVariantId, i.Quantity)).ToList(),
             Tenders: request.Tenders.Select(t => new SaleTenderInput(t.TenderType, t.Amount)).ToList(),
             ClientTransactionId: request.ClientTransactionId
         );
@@ -64,6 +64,7 @@ public class CreateSaleRequest
 public class SaleItemRequest
 {
     public Guid ProductId { get; set; }
+    public Guid? ProductVariantId { get; set; }
     public int Quantity { get; set; }
 }
 

@@ -14,6 +14,7 @@ public class StockLevelConfiguration : IEntityTypeConfiguration<StockLevel>
         builder.Property(x => x.TenantNodeId).HasColumnName("tenant_node_id").IsRequired();
         builder.Property(x => x.RootTenantId).HasColumnName("root_tenant_id").IsRequired();
         builder.Property(x => x.ProductId).HasColumnName("product_id").IsRequired();
+        builder.Property(x => x.ProductVariantId).HasColumnName("product_variant_id");
         builder.Property(x => x.QuantityOnHand).HasColumnName("quantity_on_hand");
         builder.Property(x => x.QuantityReserved).HasColumnName("quantity_reserved");
         builder.Property(x => x.ReorderPoint).HasColumnName("reorder_point");

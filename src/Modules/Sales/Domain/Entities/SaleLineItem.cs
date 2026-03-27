@@ -6,6 +6,8 @@ public class SaleLineItem : BaseEntity
 {
     public Guid SaleId { get; set; }
     public Guid ProductId { get; set; }
+    public Guid? ProductVariantId { get; set; }
+    public string? VariantDescription { get; set; }
     public string Sku { get; set; } = string.Empty;
     public string ProductName { get; set; } = string.Empty;
     public int Quantity { get; set; }

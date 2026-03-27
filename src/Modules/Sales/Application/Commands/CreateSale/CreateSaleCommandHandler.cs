@@ -86,6 +86,7 @@ public class CreateSaleCommandHandler : ICommandHandler<CreateSaleCommand, SaleD
             lineItems.Add(new SaleLineItem
             {
                 ProductId = product.Id,
+                ProductVariantId = item.ProductVariantId,
                 Sku = product.Sku,
                 ProductName = product.Name,
                 Quantity = item.Quantity,
@@ -185,7 +186,7 @@ public class CreateSaleCommandHandler : ICommandHandler<CreateSaleCommand, SaleD
         foreach (var li in lineItems)
         {
             await _mediator.Send(new DecrementStockCommand(
-                li.ProductId, li.Quantity, sale.Id,
+                li.ProductId, li.ProductVariantId, li.Quantity, sale.Id,
                 _tenantContext.TenantNodeId, _tenantContext.RootTenantId
             ), cancellationToken);
         }
@@ -208,6 +209,8 @@ public class CreateSaleCommandHandler : ICommandHandler<CreateSaleCommand, SaleD
         LineItems = sale.LineItems.Select(li => new SaleLineItemDto
         {
             ProductId = li.ProductId,
+            ProductVariantId = li.ProductVariantId,
+            VariantDescription = li.VariantDescription,
             Sku = li.Sku,
             ProductName = li.ProductName,
             Quantity = li.Quantity,

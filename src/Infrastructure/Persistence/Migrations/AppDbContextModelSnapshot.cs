@@ -363,6 +363,11 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("category_id");
 
+                    b.Property<string>("Color")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("color");
+
                     b.Property<decimal?>("CostPrice")
                         .HasColumnType("decimal(10,2)")
                         .HasColumnName("cost_price");
@@ -386,6 +391,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDefaultValue(true)
                         .HasColumnName("is_active");
 
+                    b.Property<DateTime?>("MapDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("map_date");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
@@ -400,11 +409,81 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("root_tenant_id");
 
+                    b.Property<Guid?>("SizeGridId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("size_grid_id");
+
                     b.Property<string>("Sku")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("sku");
+
+                    b.Property<Guid?>("SupplierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("supplier_id");
+
+                    b.Property<Guid>("TenantNodeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_node_id");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("SizeGridId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.HasIndex("RootTenantId", "Sku")
+                        .IsUnique()
+                        .HasDatabaseName("ix_products_tenant_sku");
+
+                    b.ToTable("products", (string)null);
+                });
+
+            modelBuilder.Entity("Modules.Catalog.Domain.Entities.ProductVariant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Dimension1Value")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("dimension1_value");
+
+                    b.Property<string>("Dimension2Value")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("dimension2_value");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<Guid>("RootTenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("root_tenant_id");
 
                     b.Property<Guid>("TenantNodeId")
                         .HasColumnType("uuid")
@@ -419,22 +498,191 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
+                    b.HasKey("Id");
+
+                    b.HasIndex("Upc")
+                        .HasDatabaseName("ix_product_variants_upc");
+
+                    b.HasIndex("RootTenantId", "Upc")
+                        .IsUnique()
+                        .HasDatabaseName("ix_product_variants_tenant_upc")
+                        .HasFilter("upc IS NOT NULL");
+
+                    b.HasIndex("ProductId", "Dimension1Value", "Dimension2Value")
+                        .IsUnique()
+                        .HasDatabaseName("ix_product_variants_product_dims");
+
+                    b.ToTable("product_variants", (string)null);
+                });
+
+            modelBuilder.Entity("Modules.Catalog.Domain.Entities.SizeGrid", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("Dimension1Label")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("dimension1_label");
+
+                    b.Property<string>("Dimension2Label")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("dimension2_label");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("RootTenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("root_tenant_id");
+
+                    b.Property<Guid>("TenantNodeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_node_id");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
                     b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uuid")
                         .HasColumnName("updated_by");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("Upc")
-                        .HasDatabaseName("ix_products_upc");
-
-                    b.HasIndex("RootTenantId", "Sku")
+                    b.HasIndex("RootTenantId", "Name")
                         .IsUnique()
-                        .HasDatabaseName("ix_products_tenant_sku");
+                        .HasDatabaseName("ix_size_grids_tenant_name");
 
-                    b.ToTable("products", (string)null);
+                    b.ToTable("size_grids", (string)null);
+                });
+
+            modelBuilder.Entity("Modules.Catalog.Domain.Entities.SizeGridValue", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<int>("Dimension")
+                        .HasColumnType("integer")
+                        .HasColumnName("dimension");
+
+                    b.Property<Guid>("SizeGridId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("size_grid_id");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer")
+                        .HasColumnName("sort_order");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SizeGridId", "Dimension", "SortOrder")
+                        .HasDatabaseName("ix_size_grid_values_order");
+
+                    b.HasIndex("SizeGridId", "Dimension", "Value")
+                        .IsUnique()
+                        .HasDatabaseName("ix_size_grid_values_unique");
+
+                    b.ToTable("size_grid_values", (string)null);
+                });
+
+            modelBuilder.Entity("Modules.Catalog.Domain.Entities.Supplier", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("code");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("RootTenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("root_tenant_id");
+
+                    b.Property<Guid>("TenantNodeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_node_id");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RootTenantId", "Code")
+                        .IsUnique()
+                        .HasDatabaseName("ix_suppliers_tenant_code")
+                        .HasFilter("code IS NOT NULL");
+
+                    b.HasIndex("RootTenantId", "Name")
+                        .IsUnique()
+                        .HasDatabaseName("ix_suppliers_tenant_name");
+
+                    b.ToTable("suppliers", (string)null);
                 });
 
             modelBuilder.Entity("Modules.Inventory.Domain.Entities.StockLevel", b =>
@@ -451,6 +699,10 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid")
                         .HasColumnName("product_id");
+
+                    b.Property<Guid?>("ProductVariantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_variant_id");
 
                     b.Property<int>("QuantityOnHand")
                         .HasColumnType("integer")
@@ -508,6 +760,10 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uuid")
                         .HasColumnName("product_id");
+
+                    b.Property<Guid?>("ProductVariantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_variant_id");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("integer")
@@ -668,6 +924,10 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("product_name");
 
+                    b.Property<Guid?>("ProductVariantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_variant_id");
+
                     b.Property<int>("Quantity")
                         .HasColumnType("integer")
                         .HasColumnName("quantity");
@@ -689,6 +949,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
+
+                    b.Property<string>("VariantDescription")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("variant_description");
 
                     b.HasKey("Id");
 
@@ -921,7 +1186,43 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Modules.Catalog.Domain.Entities.SizeGrid", "SizeGrid")
+                        .WithMany("Products")
+                        .HasForeignKey("SizeGridId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Modules.Catalog.Domain.Entities.Supplier", "Supplier")
+                        .WithMany("Products")
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Category");
+
+                    b.Navigation("SizeGrid");
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("Modules.Catalog.Domain.Entities.ProductVariant", b =>
+                {
+                    b.HasOne("Modules.Catalog.Domain.Entities.Product", "Product")
+                        .WithMany("Variants")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Modules.Catalog.Domain.Entities.SizeGridValue", b =>
+                {
+                    b.HasOne("Modules.Catalog.Domain.Entities.SizeGrid", "SizeGrid")
+                        .WithMany("Values")
+                        .HasForeignKey("SizeGridId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("SizeGrid");
                 });
 
             modelBuilder.Entity("Modules.Sales.Domain.Entities.SaleLineItem", b =>
@@ -992,6 +1293,23 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Modules.Catalog.Domain.Entities.Department", b =>
                 {
                     b.Navigation("Categories");
+                });
+
+            modelBuilder.Entity("Modules.Catalog.Domain.Entities.Product", b =>
+                {
+                    b.Navigation("Variants");
+                });
+
+            modelBuilder.Entity("Modules.Catalog.Domain.Entities.SizeGrid", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("Values");
+                });
+
+            modelBuilder.Entity("Modules.Catalog.Domain.Entities.Supplier", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Modules.Sales.Domain.Entities.Sale", b =>

@@ -7,6 +7,9 @@ import { DashboardPage } from '@/pages/DashboardPage';
 import { ProductsPage } from '@/pages/catalog/ProductsPage';
 import { ProductFormPage } from '@/pages/catalog/ProductFormPage';
 import { DepartmentsPage } from '@/pages/catalog/DepartmentsPage';
+import { SuppliersPage } from '@/pages/catalog/SuppliersPage';
+import { SizeGridsPage } from '@/pages/catalog/SizeGridsPage';
+import { SizeGridFormPage } from '@/pages/catalog/SizeGridFormPage';
 import { StockLevelsPage } from '@/pages/inventory/StockLevelsPage';
 import { ReceiveStockPage } from '@/pages/inventory/ReceiveStockPage';
 import { SalesPage } from '@/pages/sales/SalesPage';
@@ -23,6 +26,10 @@ function App() {
           <Route path="catalog/products/new" element={<ProductFormPage />} />
           <Route path="catalog/products/:id/edit" element={<ProductFormPage />} />
           <Route path="catalog/departments" element={<DepartmentsPage />} />
+          <Route path="catalog/suppliers" element={<SuppliersPage />} />
+          <Route path="catalog/size-grids" element={<SizeGridsPage />} />
+          <Route path="catalog/size-grids/new" element={<SizeGridFormPage />} />
+          <Route path="catalog/size-grids/:id/edit" element={<SizeGridFormPage />} />
           <Route path="inventory" element={<StockLevelsPage />} />
           <Route path="inventory/receive" element={<ReceiveStockPage />} />
           <Route path="sales" element={<SalesPage />} />

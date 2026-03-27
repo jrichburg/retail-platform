@@ -11,5 +11,10 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
         RuleFor(x => x.CategoryId).NotEmpty();
         RuleFor(x => x.RetailPrice).GreaterThan(0);
         RuleFor(x => x.CostPrice).GreaterThanOrEqualTo(0).When(x => x.CostPrice.HasValue);
+        RuleFor(x => x.Color).MaximumLength(50);
+        RuleForEach(x => x.Variants).ChildRules(v =>
+        {
+            v.RuleFor(x => x.Upc).MaximumLength(50);
+        });
     }
 }

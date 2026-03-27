@@ -6,10 +6,14 @@ public record UpdateProductCommand(
     Guid Id,
     string Name,
     string Sku,
-    string? Upc,
     Guid CategoryId,
+    Guid? SupplierId,
+    string? Color,
+    DateTime? MapDate,
+    Guid? SizeGridId,
     decimal RetailPrice,
     decimal? CostPrice,
     string? Description,
-    bool IsActive
+    bool IsActive,
+    List<CreateProduct.ProductVariantInput>? Variants
 ) : ICommand;

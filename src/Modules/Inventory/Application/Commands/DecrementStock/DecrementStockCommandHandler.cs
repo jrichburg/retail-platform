@@ -30,6 +30,7 @@ public class DecrementStockCommandHandler : ICommandHandler<DecrementStockComman
             TenantNodeId = request.TenantNodeId,
             RootTenantId = request.RootTenantId,
             ProductId = request.ProductId,
+            ProductVariantId = request.ProductVariantId,
             TransactionType = "sale",
             Quantity = -request.Quantity,
             RunningBalance = stockLevel.QuantityOnHand,

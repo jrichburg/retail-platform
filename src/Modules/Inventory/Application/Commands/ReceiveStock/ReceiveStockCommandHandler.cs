@@ -29,6 +29,7 @@ public class ReceiveStockCommandHandler : ICommandHandler<ReceiveStockCommand>
                 TenantNodeId = _tenantContext.TenantNodeId,
                 RootTenantId = _tenantContext.RootTenantId,
                 ProductId = request.ProductId,
+                ProductVariantId = request.ProductVariantId,
                 QuantityOnHand = request.Quantity,
             };
             _db.Set<StockLevel>().Add(stockLevel);
@@ -43,6 +44,7 @@ public class ReceiveStockCommandHandler : ICommandHandler<ReceiveStockCommand>
             TenantNodeId = _tenantContext.TenantNodeId,
             RootTenantId = _tenantContext.RootTenantId,
             ProductId = request.ProductId,
+            ProductVariantId = request.ProductVariantId,
             TransactionType = "received",
             Quantity = request.Quantity,
             RunningBalance = stockLevel.QuantityOnHand,

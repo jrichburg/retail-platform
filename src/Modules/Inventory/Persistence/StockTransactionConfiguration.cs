@@ -14,6 +14,7 @@ public class StockTransactionConfiguration : IEntityTypeConfiguration<StockTrans
         builder.Property(x => x.TenantNodeId).HasColumnName("tenant_node_id").IsRequired();
         builder.Property(x => x.RootTenantId).HasColumnName("root_tenant_id").IsRequired();
         builder.Property(x => x.ProductId).HasColumnName("product_id").IsRequired();
+        builder.Property(x => x.ProductVariantId).HasColumnName("product_variant_id");
         builder.Property(x => x.TransactionType).HasColumnName("transaction_type").IsRequired().HasMaxLength(30);
         builder.Property(x => x.Quantity).HasColumnName("quantity").IsRequired();
         builder.Property(x => x.RunningBalance).HasColumnName("running_balance");

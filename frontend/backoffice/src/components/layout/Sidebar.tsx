@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Package, Warehouse, ShoppingCart, FolderTree, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Package, Warehouse, ShoppingCart, FolderTree, Building2, Grid3X3, ChevronRight } from 'lucide-react';
 
 const navSections = [
   {
@@ -13,6 +13,8 @@ const navSections = [
     items: [
       { to: '/catalog/products', icon: Package, label: 'Products' },
       { to: '/catalog/departments', icon: FolderTree, label: 'Departments' },
+      { to: '/catalog/suppliers', icon: Building2, label: 'Suppliers' },
+      { to: '/catalog/size-grids', icon: Grid3X3, label: 'Size Grids' },
     ],
   },
   {

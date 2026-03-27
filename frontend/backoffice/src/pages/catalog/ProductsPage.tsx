@@ -47,6 +47,8 @@ export function ProductsPage() {
                   <tr className="border-b border-slate-100 bg-slate-50/50">
                     <th className="table-header">Product</th>
                     <th className="table-header">SKU</th>
+                    <th className="table-header">Supplier</th>
+                    <th className="table-header">Color</th>
                     <th className="table-header">Category</th>
                     <th className="table-header text-right">Price</th>
                     <th className="table-header text-center">Status</th>
@@ -62,12 +64,17 @@ export function ProductsPage() {
                             <Package className="h-4 w-4" />
                           </div>
                           <div>
-                            <p className="font-medium text-slate-900">{product.name}</p>
+                            <p className="font-medium text-slate-900">
+                              {product.name}
+                              {product.variantCount > 0 && <span className="badge-neutral ml-2">{product.variantCount} sizes</span>}
+                            </p>
                             {product.upc && <p className="text-xs text-slate-400">UPC: {product.upc}</p>}
                           </div>
                         </div>
                       </td>
                       <td className="table-cell font-mono text-xs text-slate-600">{product.sku}</td>
+                      <td className="table-cell text-sm text-slate-600">{product.supplierName || '—'}</td>
+                      <td className="table-cell text-sm text-slate-600">{product.color || '—'}</td>
                       <td className="table-cell">
                         <span className="text-slate-500">{product.departmentName}</span>
                         <span className="mx-1 text-slate-300">/</span>

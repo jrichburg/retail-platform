@@ -37,14 +37,14 @@ public class InventoryController : ControllerBase
     [HttpPost("receive")]
     public async Task<IActionResult> ReceiveStock([FromBody] ReceiveStockRequest request)
     {
-        var result = await _mediator.Send(new ReceiveStockCommand(request.ProductId, request.Quantity, request.Reference, request.Notes));
+        var result = await _mediator.Send(new ReceiveStockCommand(request.ProductId, request.ProductVariantId, request.Quantity, request.Reference, request.Notes));
         return result.IsSuccess ? Ok() : BadRequest(new { message = result.Error });
     }
 
     [HttpPost("adjust")]
     public async Task<IActionResult> AdjustStock([FromBody] AdjustStockRequest request)
     {
-        var result = await _mediator.Send(new AdjustStockCommand(request.ProductId, request.Quantity, request.Reason));
+        var result = await _mediator.Send(new AdjustStockCommand(request.ProductId, request.ProductVariantId, request.Quantity, request.Reason));
         return result.IsSuccess ? Ok() : BadRequest(new { message = result.Error });
     }
 }
@@ -52,6 +52,7 @@ public class InventoryController : ControllerBase
 public class ReceiveStockRequest
 {
     public Guid ProductId { get; set; }
+    public Guid? ProductVariantId { get; set; }
     public int Quantity { get; set; }
     public string? Reference { get; set; }
     public string? Notes { get; set; }
@@ -60,6 +61,7 @@ public class ReceiveStockRequest
 public class AdjustStockRequest
 {
     public Guid ProductId { get; set; }
+    public Guid? ProductVariantId { get; set; }
     public int Quantity { get; set; }
     public string Reason { get; set; } = string.Empty;
 }

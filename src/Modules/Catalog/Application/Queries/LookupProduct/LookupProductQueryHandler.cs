@@ -25,16 +25,18 @@ public class LookupProductQueryHandler : IQueryHandler<LookupProductQuery, Produ
         using var connection = _connectionFactory.CreateConnection();
 
         const string sql = """
-            SELECT p.id AS Id, p.name AS Name, p.sku AS Sku, p.upc AS Upc,
+            SELECT p.id AS Id, p.name AS Name, p.sku AS Sku,
+                   pv.upc AS Upc,
                    p.category_id AS CategoryId, c.name AS CategoryName, d.name AS DepartmentName,
                    p.retail_price AS RetailPrice, p.cost_price AS CostPrice,
                    p.description AS Description, p.is_active AS IsActive
             FROM products p
+            LEFT JOIN product_variants pv ON pv.product_id = p.id
             JOIN categories c ON c.id = p.category_id
             JOIN departments d ON d.id = c.department_id
             WHERE p.root_tenant_id = @RootTenantId
               AND p.is_active = true
-              AND ((@Sku IS NOT NULL AND p.sku = @Sku) OR (@Upc IS NOT NULL AND p.upc = @Upc))
+              AND ((@Sku IS NOT NULL AND p.sku = @Sku) OR (@Upc IS NOT NULL AND pv.upc = @Upc))
             LIMIT 1
             """;
 

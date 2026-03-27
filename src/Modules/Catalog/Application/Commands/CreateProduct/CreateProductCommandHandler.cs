@@ -21,22 +21,27 @@ public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand,
     {
         var skuExists = await _db.Set<Product>()
             .AnyAsync(p => p.Sku == request.Sku, cancellationToken);
-
         if (skuExists)
             return Result.Failure<Guid>($"A product with SKU '{request.Sku}' already exists.");
 
-        var category = await _db.Set<Category>()
-            .AnyAsync(c => c.Id == request.CategoryId, cancellationToken);
-
-        if (!category)
+        if (!await _db.Set<Category>().AnyAsync(c => c.Id == request.CategoryId, cancellationToken))
             return Result.Failure<Guid>("Category not found.");
+
+        if (request.SupplierId.HasValue && !await _db.Set<Supplier>().AnyAsync(s => s.Id == request.SupplierId.Value, cancellationToken))
+            return Result.Failure<Guid>("Supplier not found.");
+
+        if (request.SizeGridId.HasValue && !await _db.Set<SizeGrid>().AnyAsync(g => g.Id == request.SizeGridId.Value, cancellationToken))
+            return Result.Failure<Guid>("Size grid not found.");
 
         var product = new Product
         {
             Name = request.Name,
             Sku = request.Sku,
-            Upc = request.Upc,
             CategoryId = request.CategoryId,
+            SupplierId = request.SupplierId,
+            Color = request.Color,
+            MapDate = request.MapDate,
+            SizeGridId = request.SizeGridId,
             RetailPrice = request.RetailPrice,
             CostPrice = request.CostPrice,
             Description = request.Description,
@@ -44,6 +49,23 @@ public class CreateProductCommandHandler : ICommandHandler<CreateProductCommand,
             TenantNodeId = _tenantContext.TenantNodeId,
             RootTenantId = _tenantContext.RootTenantId,
         };
+
+        // Create variants
+        if (request.Variants != null && request.Variants.Count > 0)
+        {
+            foreach (var v in request.Variants)
+            {
+                product.Variants.Add(new ProductVariant
+                {
+                    Dimension1Value = v.Dimension1Value,
+                    Dimension2Value = v.Dimension2Value,
+                    Upc = v.Upc,
+                    IsActive = true,
+                    TenantNodeId = _tenantContext.TenantNodeId,
+                    RootTenantId = _tenantContext.RootTenantId,
+                });
+            }
+        }
 
         _db.Set<Product>().Add(product);
         await _db.SaveChangesAsync(cancellationToken);

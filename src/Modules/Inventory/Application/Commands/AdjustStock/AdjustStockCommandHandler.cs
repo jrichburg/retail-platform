@@ -36,6 +36,7 @@ public class AdjustStockCommandHandler : ICommandHandler<AdjustStockCommand>
             TenantNodeId = _tenantContext.TenantNodeId,
             RootTenantId = _tenantContext.RootTenantId,
             ProductId = request.ProductId,
+            ProductVariantId = request.ProductVariantId,
             TransactionType = "adjustment",
             Quantity = request.Quantity,
             RunningBalance = newQty,

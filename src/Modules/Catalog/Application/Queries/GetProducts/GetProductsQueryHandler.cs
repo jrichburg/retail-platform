@@ -22,6 +22,7 @@ public class GetProductsQueryHandler : IQueryHandler<GetProductsQuery, PagedResu
             .AsNoTracking()
             .Include(p => p.Category)
                 .ThenInclude(c => c.Department)
+            .Include(p => p.Supplier)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(request.Search))
@@ -29,8 +30,7 @@ public class GetProductsQueryHandler : IQueryHandler<GetProductsQuery, PagedResu
             var search = request.Search.ToLower();
             query = query.Where(p =>
                 p.Name.ToLower().Contains(search) ||
-                p.Sku.ToLower().Contains(search) ||
-                (p.Upc != null && p.Upc.Contains(search)));
+                p.Sku.ToLower().Contains(search));
         }
 
         if (request.CategoryId.HasValue)
@@ -50,14 +50,21 @@ public class GetProductsQueryHandler : IQueryHandler<GetProductsQuery, PagedResu
                 Id = p.Id,
                 Name = p.Name,
                 Sku = p.Sku,
-                Upc = p.Upc,
+                Upc = null,
                 CategoryId = p.CategoryId,
                 CategoryName = p.Category.Name,
                 DepartmentName = p.Category.Department.Name,
+                SupplierId = p.SupplierId,
+                SupplierName = p.Supplier != null ? p.Supplier.Name : null,
+                Color = p.Color,
+                MapDate = p.MapDate,
+                SizeGridId = p.SizeGridId,
+                SizeGridName = p.SizeGrid != null ? p.SizeGrid.Name : null,
                 RetailPrice = p.RetailPrice,
                 CostPrice = p.CostPrice,
                 Description = p.Description,
                 IsActive = p.IsActive,
+                VariantCount = p.Variants.Count,
             })
             .ToListAsync(cancellationToken);
 

@@ -13,6 +13,8 @@ public class SaleLineItemConfiguration : IEntityTypeConfiguration<SaleLineItem>
         builder.Property(x => x.Id).HasColumnName("id");
         builder.Property(x => x.SaleId).HasColumnName("sale_id").IsRequired();
         builder.Property(x => x.ProductId).HasColumnName("product_id").IsRequired();
+        builder.Property(x => x.ProductVariantId).HasColumnName("product_variant_id");
+        builder.Property(x => x.VariantDescription).HasColumnName("variant_description").HasMaxLength(100);
         builder.Property(x => x.Sku).HasColumnName("sku").IsRequired().HasMaxLength(50);
         builder.Property(x => x.ProductName).HasColumnName("product_name").IsRequired().HasMaxLength(200);
         builder.Property(x => x.Quantity).HasColumnName("quantity").IsRequired();
