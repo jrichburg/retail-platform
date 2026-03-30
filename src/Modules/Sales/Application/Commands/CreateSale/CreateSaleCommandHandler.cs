@@ -151,6 +151,8 @@ public class CreateSaleCommandHandler : ICommandHandler<CreateSaleCommand, SaleD
             TotalAmount = totalAmount,
             TenderedAmount = tenderedAmount,
             ChangeAmount = tenderedAmount - totalAmount,
+            CustomerId = request.CustomerId,
+            CustomerName = request.CustomerName,
             CashierId = _currentUser.UserId != Guid.Empty ? _currentUser.UserId : null,
         };
 
@@ -206,6 +208,8 @@ public class CreateSaleCommandHandler : ICommandHandler<CreateSaleCommand, SaleD
         TotalAmount = sale.TotalAmount,
         TenderedAmount = sale.TenderedAmount,
         ChangeAmount = sale.ChangeAmount,
+        CustomerId = sale.CustomerId,
+        CustomerName = sale.CustomerName,
         LineItems = sale.LineItems.Select(li => new SaleLineItemDto
         {
             ProductId = li.ProductId,

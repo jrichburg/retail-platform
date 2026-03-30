@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { demoProducts } from '@/lib/demo-data';
-import { Search, X, ShoppingBag, Minus, Plus, Trash2, ArrowLeft } from 'lucide-react';
+import { demoProducts, demoCustomers } from '@/lib/demo-data';
+import { Search, X, ShoppingBag, Minus, Plus, Trash2, ArrowLeft, User, ChevronDown } from 'lucide-react';
 
 interface LineItem {
   productId: string;
@@ -22,6 +22,18 @@ export function PosTransactionPage() {
   const [searchValue, setSearchValue] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const scanRef = useRef<HTMLInputElement>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<{ id: string; firstName: string; lastName: string } | null>(null);
+  const [showCustomerSearch, setShowCustomerSearch] = useState(false);
+  const [customerQuery, setCustomerQuery] = useState('');
+
+  const filteredCustomers = customerQuery
+    ? demoCustomers.items.filter(c =>
+        c.firstName.toLowerCase().includes(customerQuery.toLowerCase()) ||
+        c.lastName.toLowerCase().includes(customerQuery.toLowerCase()) ||
+        c.email?.toLowerCase().includes(customerQuery.toLowerCase()) ||
+        c.phone?.includes(customerQuery)
+      )
+    : demoCustomers.items;
 
   const subtotal = lines.reduce((s, l) => s + l.price * l.quantity, 0);
   const tax = Math.round(subtotal * TAX_RATE * 100) / 100;
@@ -111,9 +123,67 @@ export function PosTransactionPage() {
             </div>
             <span className="text-sm font-semibold text-white">POS Terminal</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400">Main Street Store</span>
-            <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <button
+                onClick={() => setShowCustomerSearch(!showCustomerSearch)}
+                className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
+                  selectedCustomer
+                    ? 'bg-amber-400/20 text-amber-300 hover:bg-amber-400/30'
+                    : 'bg-white/10 text-slate-300 hover:bg-white/20'
+                }`}
+              >
+                <User className="h-3.5 w-3.5" />
+                {selectedCustomer ? `${selectedCustomer.firstName} ${selectedCustomer.lastName}` : 'Customer'}
+                <ChevronDown className="h-3 w-3" />
+              </button>
+              {showCustomerSearch && (
+                <div className="absolute right-0 top-full mt-2 w-72 rounded-xl border border-gray-200 bg-white shadow-xl z-50">
+                  <div className="p-2">
+                    <input
+                      type="text"
+                      value={customerQuery}
+                      onChange={(e) => setCustomerQuery(e.target.value)}
+                      placeholder="Search customers..."
+                      autoFocus
+                      className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/20"
+                    />
+                  </div>
+                  <div className="max-h-48 overflow-y-auto">
+                    {selectedCustomer && (
+                      <button
+                        onClick={() => { setSelectedCustomer(null); setShowCustomerSearch(false); setCustomerQuery(''); }}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs text-red-500 hover:bg-red-50 transition-colors"
+                      >
+                        <X className="h-3 w-3" /> Remove customer
+                      </button>
+                    )}
+                    {filteredCustomers.map(c => (
+                      <button
+                        key={c.id}
+                        onClick={() => { setSelectedCustomer({ id: c.id, firstName: c.firstName, lastName: c.lastName }); setShowCustomerSearch(false); setCustomerQuery(''); }}
+                        className="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100 text-slate-500">
+                          <span className="text-[10px] font-bold">{c.firstName[0]}{c.lastName[0]}</span>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{c.firstName} {c.lastName}</p>
+                          <p className="text-xs text-gray-400">{c.email || c.phone || 'No contact'}</p>
+                        </div>
+                      </button>
+                    ))}
+                    {filteredCustomers.length === 0 && (
+                      <p className="px-3 py-4 text-center text-xs text-gray-400">No customers found</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-400">Main Street Store</span>
+              <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
+            </div>
           </div>
         </div>
 

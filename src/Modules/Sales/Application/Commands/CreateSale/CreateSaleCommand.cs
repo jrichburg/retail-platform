@@ -6,6 +6,8 @@ namespace Modules.Sales.Application.Commands.CreateSale;
 public record CreateSaleCommand(
     List<SaleItemInput> Items,
     List<SaleTenderInput> Tenders,
+    Guid? CustomerId = null,
+    string? CustomerName = null,
     Guid? ClientTransactionId = null // for offline idempotency
 ) : ICommand<SaleDto>;
 

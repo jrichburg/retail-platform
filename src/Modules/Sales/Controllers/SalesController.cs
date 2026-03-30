@@ -40,6 +40,8 @@ public class SalesController : ControllerBase
         var command = new CreateSaleCommand(
             Items: request.Items.Select(i => new SaleItemInput(i.ProductId, i.ProductVariantId, i.Quantity)).ToList(),
             Tenders: request.Tenders.Select(t => new SaleTenderInput(t.TenderType, t.Amount)).ToList(),
+            CustomerId: request.CustomerId,
+            CustomerName: request.CustomerName,
             ClientTransactionId: request.ClientTransactionId
         );
         var result = await _mediator.Send(command);
@@ -58,6 +60,8 @@ public class CreateSaleRequest
 {
     public List<SaleItemRequest> Items { get; set; } = new();
     public List<SaleTenderRequest> Tenders { get; set; } = new();
+    public Guid? CustomerId { get; set; }
+    public string? CustomerName { get; set; }
     public Guid? ClientTransactionId { get; set; }
 }
 

@@ -22,6 +22,8 @@ public class SaleConfiguration : IEntityTypeConfiguration<Sale>
         builder.Property(x => x.TotalAmount).HasColumnName("total_amount").HasColumnType("decimal(10,2)");
         builder.Property(x => x.TenderedAmount).HasColumnName("tendered_amount").HasColumnType("decimal(10,2)");
         builder.Property(x => x.ChangeAmount).HasColumnName("change_amount").HasColumnType("decimal(10,2)");
+        builder.Property(x => x.CustomerId).HasColumnName("customer_id");
+        builder.Property(x => x.CustomerName).HasColumnName("customer_name").HasMaxLength(200);
         builder.Property(x => x.CashierId).HasColumnName("cashier_id");
         builder.Property(x => x.CreatedAt).HasColumnName("created_at");
         builder.Property(x => x.UpdatedAt).HasColumnName("updated_at");

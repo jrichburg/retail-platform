@@ -13,6 +13,8 @@ public class Sale : TenantScopedEntity, IAuditableEntity
     public decimal TotalAmount { get; set; }
     public decimal TenderedAmount { get; set; }
     public decimal ChangeAmount { get; set; }
+    public Guid? CustomerId { get; set; }
+    public string? CustomerName { get; set; }
     public Guid? CashierId { get; set; }
     public Guid CreatedBy { get; set; }
     public Guid? UpdatedBy { get; set; }

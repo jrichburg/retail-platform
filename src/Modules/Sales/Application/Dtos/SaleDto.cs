@@ -12,6 +12,8 @@ public class SaleDto
     public decimal TotalAmount { get; set; }
     public decimal TenderedAmount { get; set; }
     public decimal ChangeAmount { get; set; }
+    public Guid? CustomerId { get; set; }
+    public string? CustomerName { get; set; }
     public List<SaleLineItemDto> LineItems { get; set; } = new();
     public List<SaleTenderDto> Tenders { get; set; } = new();
 }

@@ -163,3 +163,14 @@ export const demoSales = {
   ],
   totalCount: 3, page: 1, pageSize: 25, totalPages: 1,
 };
+
+export const demoCustomers = {
+  items: [
+    { id: 'cust1', firstName: 'Sarah', lastName: 'Johnson', email: 'sarah.j@email.com', phone: '555-0101', street: '123 Main St', city: 'Springfield', state: 'IL', zip: '62701', notes: 'Regular runner, prefers Brooks', isActive: true, createdAt: '2026-01-15T10:00:00Z' },
+    { id: 'cust2', firstName: 'Michael', lastName: 'Chen', email: 'mchen@email.com', phone: '555-0102', street: '456 Oak Ave', city: 'Springfield', state: 'IL', zip: '62702', notes: null, isActive: true, createdAt: '2026-02-01T14:00:00Z' },
+    { id: 'cust3', firstName: 'Emily', lastName: 'Rodriguez', email: 'emily.r@email.com', phone: '555-0103', street: null, city: null, state: null, zip: null, notes: 'Wide width sizes', isActive: true, createdAt: '2026-02-20T09:00:00Z' },
+    { id: 'cust4', firstName: 'James', lastName: 'Williams', email: null, phone: '555-0104', street: '789 Elm Dr', city: 'Springfield', state: 'IL', zip: '62703', notes: null, isActive: true, createdAt: '2026-03-01T11:00:00Z' },
+    { id: 'cust5', firstName: 'Lisa', lastName: 'Thompson', email: 'lisa.t@email.com', phone: null, street: null, city: null, state: null, zip: null, notes: 'School coach - uniform orders', isActive: true, createdAt: '2026-03-10T16:00:00Z' },
+  ],
+  totalCount: 5, page: 1, pageSize: 25, totalPages: 1,
+};
