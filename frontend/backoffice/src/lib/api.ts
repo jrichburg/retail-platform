@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { supabase } from './supabase';
 
-export const isDemo = import.meta.env.VITE_DEMO_MODE === 'true' || (!import.meta.env.VITE_SUPABASE_URL && !import.meta.env.VITE_API_URL);
+export const isDemo = import.meta.env.VITE_DEMO_MODE === 'true' ||
+  !import.meta.env.VITE_SUPABASE_URL ||
+  import.meta.env.VITE_SUPABASE_URL === 'https://your-project.supabase.co';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api/v1',

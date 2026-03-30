@@ -20,12 +20,21 @@ import { PurchaseOrderDetailPage } from '@/pages/inventory/PurchaseOrderDetailPa
 import { ReceiveAgainstPOPage } from '@/pages/inventory/ReceiveAgainstPOPage';
 import { SalesPage } from '@/pages/sales/SalesPage';
 import { SaleDetailPage } from '@/pages/sales/SaleDetailPage';
+import { PosLayout } from '@/pages/pos/PosLayout';
+import { PosTransactionPage } from '@/pages/pos/PosTransactionPage';
+import { PosTenderPage } from '@/pages/pos/PosTenderPage';
+import { PosReceiptPage } from '@/pages/pos/PosReceiptPage';
 
 function App() {
   return (
     <AuthProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/pos" element={<PosLayout />}>
+          <Route index element={<PosTransactionPage />} />
+          <Route path="tender" element={<PosTenderPage />} />
+          <Route path="receipt" element={<PosReceiptPage />} />
+        </Route>
         <Route path="/" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
           <Route index element={<DashboardPage />} />
           <Route path="catalog/products" element={<ProductsPage />} />

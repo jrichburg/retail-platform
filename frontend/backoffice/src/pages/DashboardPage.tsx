@@ -2,7 +2,7 @@ import { useProducts } from '@/hooks/use-products';
 import { useStockLevels } from '@/hooks/use-inventory';
 import { useSales } from '@/hooks/use-sales';
 import { Link } from 'react-router-dom';
-import { Package, Warehouse, ShoppingCart, TrendingUp, ArrowRight, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Package, Warehouse, ShoppingCart, TrendingUp, ArrowRight, ArrowUpRight, ArrowDownRight, Monitor } from 'lucide-react';
 
 export function DashboardPage() {
   const { data: products } = useProducts();
@@ -58,6 +58,18 @@ export function DashboardPage() {
         <h1 className="page-title">Overview</h1>
         <p className="mt-1 text-sm text-slate-500">Your retail performance at a glance</p>
       </div>
+
+      {/* POS Launch */}
+      <Link to="/pos" className="card p-5 flex items-center gap-4 group hover:shadow-elevated transition-shadow">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 group-hover:bg-emerald-100 transition-colors">
+          <Monitor className="h-6 w-6 text-emerald-600" />
+        </div>
+        <div>
+          <p className="text-sm font-semibold text-slate-900">Open POS Terminal</p>
+          <p className="text-xs text-slate-500">Launch the point-of-sale interface</p>
+        </div>
+        <ArrowRight className="ml-auto h-5 w-5 text-slate-300 group-hover:text-amber-500 transition-colors" />
+      </Link>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
