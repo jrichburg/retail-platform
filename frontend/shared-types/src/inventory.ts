@@ -86,3 +86,45 @@ export const CreateReceiveDocumentSchema = z.object({
 });
 
 export type CreateReceiveDocumentRequest = z.infer<typeof CreateReceiveDocumentSchema>;
+
+// Purchase Order
+export interface PurchaseOrder {
+  id: string;
+  orderNumber: string;
+  supplierId: string;
+  supplierName: string;
+  status: string;
+  notes: string | null;
+  expectedDate: string | null;
+  totalCost: number;
+  lineCount: number;
+  totalUnitsOrdered: number;
+  totalUnitsReceived: number;
+  createdAt: string;
+}
+
+export interface PurchaseOrderDetail {
+  id: string;
+  orderNumber: string;
+  supplierId: string;
+  supplierName: string;
+  status: string;
+  notes: string | null;
+  expectedDate: string | null;
+  totalCost: number;
+  createdAt: string;
+  lines: PurchaseOrderLine[];
+}
+
+export interface PurchaseOrderLine {
+  id: string;
+  productId: string;
+  productVariantId: string | null;
+  productName: string;
+  sku: string;
+  variantDescription: string | null;
+  quantityOrdered: number;
+  quantityReceived: number;
+  unitCost: number;
+  lineCost: number;
+}

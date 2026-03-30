@@ -14,6 +14,9 @@ import { StockLevelsPage } from '@/pages/inventory/StockLevelsPage';
 import { ReceiveDocumentPage } from '@/pages/inventory/ReceiveDocumentPage';
 import { ReceiveDocumentsListPage } from '@/pages/inventory/ReceiveDocumentsListPage';
 import { ReceiveDocumentDetailPage } from '@/pages/inventory/ReceiveDocumentDetailPage';
+import { PurchaseOrdersPage } from '@/pages/inventory/PurchaseOrdersPage';
+import { PurchaseOrderFormPage } from '@/pages/inventory/PurchaseOrderFormPage';
+import { PurchaseOrderDetailPage } from '@/pages/inventory/PurchaseOrderDetailPage';
 import { SalesPage } from '@/pages/sales/SalesPage';
 import { SaleDetailPage } from '@/pages/sales/SaleDetailPage';
 
@@ -36,6 +39,10 @@ function App() {
           <Route path="inventory/receive" element={<ReceiveDocumentPage />} />
           <Route path="inventory/receiving" element={<ReceiveDocumentsListPage />} />
           <Route path="inventory/receiving/:id" element={<ReceiveDocumentDetailPage />} />
+          <Route path="inventory/purchase-orders" element={<PurchaseOrdersPage />} />
+          <Route path="inventory/purchase-orders/new" element={<PurchaseOrderFormPage />} />
+          <Route path="inventory/purchase-orders/:id" element={<PurchaseOrderDetailPage />} />
+          <Route path="inventory/purchase-orders/:id/edit" element={<PurchaseOrderFormPage />} />
           <Route path="sales" element={<SalesPage />} />
           <Route path="sales/:id" element={<SaleDetailPage />} />
         </Route>
