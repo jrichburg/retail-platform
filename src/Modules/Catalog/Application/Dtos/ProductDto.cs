@@ -22,6 +22,11 @@ public class ProductDto
     public bool IsActive { get; set; }
     public int VariantCount { get; set; }
     public List<ProductVariantDto>? Variants { get; set; }
+
+    // Populated by LookupProductQuery when matched by UPC
+    public Guid? MatchedVariantId { get; set; }
+    public string? MatchedDimension1Value { get; set; }
+    public string? MatchedDimension2Value { get; set; }
 }
 
 public class ProductVariantDto

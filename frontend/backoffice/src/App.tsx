@@ -11,7 +11,9 @@ import { SuppliersPage } from '@/pages/catalog/SuppliersPage';
 import { SizeGridsPage } from '@/pages/catalog/SizeGridsPage';
 import { SizeGridFormPage } from '@/pages/catalog/SizeGridFormPage';
 import { StockLevelsPage } from '@/pages/inventory/StockLevelsPage';
-import { ReceiveStockPage } from '@/pages/inventory/ReceiveStockPage';
+import { ReceiveDocumentPage } from '@/pages/inventory/ReceiveDocumentPage';
+import { ReceiveDocumentsListPage } from '@/pages/inventory/ReceiveDocumentsListPage';
+import { ReceiveDocumentDetailPage } from '@/pages/inventory/ReceiveDocumentDetailPage';
 import { SalesPage } from '@/pages/sales/SalesPage';
 import { SaleDetailPage } from '@/pages/sales/SaleDetailPage';
 
@@ -31,7 +33,9 @@ function App() {
           <Route path="catalog/size-grids/new" element={<SizeGridFormPage />} />
           <Route path="catalog/size-grids/:id/edit" element={<SizeGridFormPage />} />
           <Route path="inventory" element={<StockLevelsPage />} />
-          <Route path="inventory/receive" element={<ReceiveStockPage />} />
+          <Route path="inventory/receive" element={<ReceiveDocumentPage />} />
+          <Route path="inventory/receiving" element={<ReceiveDocumentsListPage />} />
+          <Route path="inventory/receiving/:id" element={<ReceiveDocumentDetailPage />} />
           <Route path="sales" element={<SalesPage />} />
           <Route path="sales/:id" element={<SaleDetailPage />} />
         </Route>

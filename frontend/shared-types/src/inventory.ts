@@ -38,3 +38,51 @@ export const AdjustStockSchema = z.object({
 });
 
 export type AdjustStockRequest = z.infer<typeof AdjustStockSchema>;
+
+// Receive Document
+export interface ReceiveDocument {
+  id: string;
+  documentNumber: string;
+  purchaseOrderId: string | null;
+  status: string;
+  notes: string | null;
+  lineCount: number;
+  totalUnits: number;
+  createdAt: string;
+}
+
+export interface ReceiveDocumentDetail {
+  id: string;
+  documentNumber: string;
+  purchaseOrderId: string | null;
+  status: string;
+  notes: string | null;
+  createdAt: string;
+  lines: ReceiveDocumentLine[];
+}
+
+export interface ReceiveDocumentLine {
+  id: string;
+  productId: string;
+  productVariantId: string | null;
+  productName: string;
+  sku: string;
+  upc: string | null;
+  variantDescription: string | null;
+  quantity: number;
+}
+
+export const CreateReceiveDocumentSchema = z.object({
+  lines: z.array(z.object({
+    productId: z.string().uuid(),
+    productVariantId: z.string().uuid().nullish(),
+    productName: z.string(),
+    sku: z.string(),
+    upc: z.string().nullish(),
+    variantDescription: z.string().nullish(),
+    quantity: z.number().int().positive(),
+  })).min(1, 'At least one item is required'),
+  notes: z.string().nullish(),
+});
+
+export type CreateReceiveDocumentRequest = z.infer<typeof CreateReceiveDocumentSchema>;

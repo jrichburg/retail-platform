@@ -27,13 +27,19 @@ public class LookupProductQueryHandler : IQueryHandler<LookupProductQuery, Produ
         const string sql = """
             SELECT p.id AS Id, p.name AS Name, p.sku AS Sku,
                    pv.upc AS Upc,
+                   pv.id AS MatchedVariantId,
+                   pv.dimension1_value AS MatchedDimension1Value,
+                   pv.dimension2_value AS MatchedDimension2Value,
                    p.category_id AS CategoryId, c.name AS CategoryName, d.name AS DepartmentName,
+                   p.supplier_id AS SupplierId, s.name AS SupplierName,
+                   p.style AS Style, p.color AS Color,
                    p.retail_price AS RetailPrice, p.cost_price AS CostPrice,
                    p.description AS Description, p.is_active AS IsActive
             FROM products p
             LEFT JOIN product_variants pv ON pv.product_id = p.id
             JOIN categories c ON c.id = p.category_id
             JOIN departments d ON d.id = c.department_id
+            LEFT JOIN suppliers s ON s.id = p.supplier_id
             WHERE p.root_tenant_id = @RootTenantId
               AND p.is_active = true
               AND ((@Sku IS NOT NULL AND p.sku = @Sku) OR (@Upc IS NOT NULL AND pv.upc = @Upc))
