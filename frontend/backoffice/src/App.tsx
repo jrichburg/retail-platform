@@ -17,6 +17,7 @@ import { ReceiveDocumentDetailPage } from '@/pages/inventory/ReceiveDocumentDeta
 import { PurchaseOrdersPage } from '@/pages/inventory/PurchaseOrdersPage';
 import { PurchaseOrderFormPage } from '@/pages/inventory/PurchaseOrderFormPage';
 import { PurchaseOrderDetailPage } from '@/pages/inventory/PurchaseOrderDetailPage';
+import { ReceiveAgainstPOPage } from '@/pages/inventory/ReceiveAgainstPOPage';
 import { SalesPage } from '@/pages/sales/SalesPage';
 import { SaleDetailPage } from '@/pages/sales/SaleDetailPage';
 
@@ -43,6 +44,7 @@ function App() {
           <Route path="inventory/purchase-orders/new" element={<PurchaseOrderFormPage />} />
           <Route path="inventory/purchase-orders/:id" element={<PurchaseOrderDetailPage />} />
           <Route path="inventory/purchase-orders/:id/edit" element={<PurchaseOrderFormPage />} />
+          <Route path="inventory/purchase-orders/:id/receive" element={<ReceiveAgainstPOPage />} />
           <Route path="sales" element={<SalesPage />} />
           <Route path="sales/:id" element={<SaleDetailPage />} />
         </Route>

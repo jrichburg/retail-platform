@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modules.Inventory.Application.Commands.CreateReceiveDocument;
+using Modules.Inventory.Application.Commands.ReceiveAgainstPO;
 using Modules.Inventory.Application.Queries.GetReceiveDocument;
 using Modules.Inventory.Application.Queries.GetReceiveDocuments;
 
@@ -45,10 +46,29 @@ public class ReceivingController : ControllerBase
             ? Created($"/api/v1/inventory/receiving/{result.Value}", new { id = result.Value })
             : BadRequest(new { message = result.Error });
     }
+
+    [HttpPost("against-po")]
+    public async Task<IActionResult> ReceiveAgainstPO([FromBody] ReceiveAgainstPORequest request)
+    {
+        var lines = request.Lines.Select(l => new ReceiveAgainstPOLineInput(
+            l.ProductId, l.ProductVariantId, l.ProductName, l.Sku, l.Upc, l.VariantDescription, l.Quantity
+        )).ToList();
+        var result = await _mediator.Send(new ReceiveAgainstPOCommand(request.PurchaseOrderId, lines, request.Notes));
+        return result.IsSuccess
+            ? Created($"/api/v1/inventory/receiving/{result.Value}", new { id = result.Value })
+            : BadRequest(new { message = result.Error });
+    }
 }
 
 public class CreateReceiveDocumentRequest
 {
+    public List<ReceiveLineRequest> Lines { get; set; } = new();
+    public string? Notes { get; set; }
+}
+
+public class ReceiveAgainstPORequest
+{
+    public Guid PurchaseOrderId { get; set; }
     public List<ReceiveLineRequest> Lines { get; set; } = new();
     public string? Notes { get; set; }
 }

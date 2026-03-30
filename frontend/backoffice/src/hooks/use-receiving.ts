@@ -61,3 +61,19 @@ export function useCreateReceiveDocument() {
     },
   });
 }
+
+export function useReceiveAgainstPO() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (request: any) => {
+      if (isDemo) return { id: crypto.randomUUID() };
+      const { data } = await api.post('/inventory/receiving/against-po', request);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['receive-documents'] });
+      queryClient.invalidateQueries({ queryKey: ['stock-levels'] });
+      queryClient.invalidateQueries({ queryKey: ['purchase-orders'] });
+    },
+  });
+}
