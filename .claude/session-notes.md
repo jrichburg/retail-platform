@@ -1,109 +1,118 @@
 # Session Notes
 
-Last updated: 2026-03-30
+Last updated: 2026-03-31
 
-## What Was Built This Session
+## Session 1 Summary (2026-03-25 through 2026-03-31)
 
-### Phase 1 Foundation (Complete)
-Built the entire platform from scratch in a single session:
+Built the entire retail platform from scratch in one session. Everything is committed and pushed to GitHub.
 
-1. **Project scaffolding** — .NET solution with 16 projects, npm workspaces monorepo, docker-compose, GitHub Actions CI, CLAUDE.md
-2. **SharedKernel** — CQRS abstractions (ICommand/IQuery), ValidationBehavior, Result<T>, ITenantContext, ICurrentUser, IPaymentService
-3. **Infrastructure** — AppDbContext with global tenant filters + audit auto-set, Dapper, Redis, FullsteamPaymentService
-4. **Auth module** — Supabase JWT, AppUser/Role/Permission RBAC, 3 roles, 18 permissions
-5. **Tenants module** — TenantNode hierarchy (ltree), TenantSetting (JSONB + locks)
-6. **Catalog module** — Products with variants (size grids), suppliers, departments/categories, Dapper UPC lookup
-7. **Inventory module** — Stock levels/transactions, blind receiving (multi-line), purchase orders (full lifecycle), receive against PO
-8. **Sales module** — Full POS transaction with tax calc, inventory decrement, Fullsteam payments, offline idempotency
-9. **Customers module** — Customer directory CRUD, linked to sales
-10. **Back Office frontend** — Full "Warm Industrial" design system, all pages for catalog/inventory/sales/customers, demo mode
-11. **POS web preview** — Browser-based POS at /pos with transaction, tender, receipt screens
-12. **POS native app** — React Native (Expo) with offline SQLite, sync service
+### What Was Built
 
-### Product Management Enhancements
-- Added Supplier (vendor/brand) with managed list
-- Added Style, Color, MAP Date fields to Product
-- Size Grid system: reusable templates with flexible 1D/2D dimensions
-- ProductVariant: each size/width combo gets its own UPC
-- UPC matrix in product form (2D table for footwear, 1D list for apparel)
-- Filter-first product search (Supplier + Category + Name/SKU)
+**Backend (269 C# files, 11 migrations)**
+1. Project scaffolding — .NET 8 solution, 16 projects, modular monolith
+2. SharedKernel — CQRS abstractions, Result<T>, ValidationBehavior, tenant/user context
+3. Infrastructure — AppDbContext with global tenant filters, Dapper, Redis, Fullsteam payments
+4. Auth module — Supabase JWT verification, RBAC (3 roles, 18 permissions), user sync
+5. Tenants module — TenantNode hierarchy (ltree), TenantSetting (JSONB + locks)
+6. Catalog module — Products with variants (size grids), suppliers, departments, Dapper UPC lookup
+7. Inventory module — Stock levels/transactions, blind receiving, purchase orders (full lifecycle), receive against PO
+8. Sales module — Full POS transaction with tax calc, inventory decrement, Fullsteam payments, offline idempotency
+9. Customers module — Customer directory CRUD, linked to sales
 
-### Receiving Workflow (3 phases)
-- **Phase A**: Blind receiving — scan UPC or manual add, multi-line document, stock auto-increments
-- **Phase B**: Purchase orders — create/edit/submit/close lifecycle, supplier + line items with qty/cost
-- **Phase C**: Receive against PO — scan flow with expected vs received, PO auto-transitions status
+**Frontend (48 TSX/TS files in backoffice, 8 shared type files)**
+1. Back Office — "Warm Industrial" design (DM Sans + Instrument Serif + amber accents)
+2. All pages: Dashboard, Products (filter-first), Departments, Suppliers, Size Grids, Stock Levels, Receiving (multi-line scan), Purchase Orders (status workflow), Receive Against PO, Sales, Customers
+3. POS web preview at /pos — transaction, tender (cash/card keypad), receipt screens
+4. POS native app (Expo) — offline SQLite, sync service, transaction flow
+5. Demo mode with comprehensive sample data
+6. Deployed to Vercel: https://frontend-eight-alpha-66.vercel.app
 
-### UI Redesign
-- "Warm Industrial" aesthetic: DM Sans + Instrument Serif, slate-925 sidebar, amber accents
-- Custom CSS component classes in index.css
-- Split-panel login, real dashboard with KPIs, premium data tables
+**Database**
+- Supabase project configured (PostgreSQL)
+- All 11 migrations applied via `supabase db push`
+- Seed data applied (tenant, roles, permissions, suppliers, departments, products)
 
-## Current State
+### Current State
 
-### What's Working
-- All backend modules compile clean (`dotnet build` — 0 errors)
-- All 11 EF Core migrations created and applied to Supabase
+**Working:**
+- All code compiles (`dotnet build` — 0 errors, 0 warnings)
 - Frontend builds and deploys to Vercel with demo mode
-- Live demo: https://frontend-eight-alpha-66.vercel.app
-- GitHub repo: https://github.com/jrichburg/retail-platform
+- GitHub repo fully up to date: https://github.com/jrichburg/retail-platform
+- Supabase database has all tables + seed data
 
-### What's NOT Working Yet
-- **API cannot connect to Supabase** — IPv6-only direct connection, pooler returns "Tenant or user not found". Need IPv4 add-on ($4/month) or wait for pooler propagation.
-- **No real auth flow tested** — No Supabase Auth user created yet. Demo mode only.
-- **No real data** — Only seed SQL applied via `supabase db push`. API seeders haven't run (blocked by connection).
+**NOT working yet:**
+- .NET API cannot connect to Supabase (IPv6-only, local network doesn't support it)
+- No API hosting set up (discussed Railway vs Azure — decision deferred)
+- No real Supabase Auth user created (demo mode only)
+- No end-to-end testing with live API
 
-### Blocked On
-1. **Database connectivity** — Enable IPv4 add-on in Supabase OR wait for pooler to propagate. Once connected, `dotnet run` will auto-migrate and seed.
-2. **Supabase Auth user** — Create a user in Supabase dashboard (Authentication > Users > Add user) to test real login flow.
+### Decisions Made
+- **Size grids**: Reusable templates, flexible 1D/2D dimensions
+- **Supplier**: Vendor/brand, managed list
+- **Product model**: Product = style level, ProductVariant = sellable unit (size/width/UPC)
+- **Receiving**: Multi-line documents, scan resolves to variant level
+- **PO workflow**: draft → submitted → partially_received → fully_received → closed
+- **API hosting**: Discussed Railway ($5/month) vs Azure vs eliminating .NET for Supabase Edge Functions — **decision deferred to next session**
 
-## Supabase Credentials (in gitignored files)
-- Project URL: `https://jaqibimumhdtbnnydaju.supabase.co`
-- Anon key: in `frontend/backoffice/.env`
-- JWT secret: in `src/Api/appsettings.Development.json`
-- DB password: in `src/Api/appsettings.Development.json`
+## For Next Session — Start Here
 
-## Next Steps (Priority Order)
+### Priority 1: Get the API Running
+The main blocker is connecting the .NET API to Supabase. Options:
+1. **Enable Supabase IPv4 add-on** ($4/month) → API can connect directly
+2. **Deploy API to Railway** (~$5/month) → Railway has IPv6 support, API connects from cloud
+3. **Rewrite to Supabase Edge Functions** → Eliminates .NET, major effort
 
-### Immediate
-1. Enable Supabase IPv4 add-on → unblocks API connection
-2. Run `dotnet run --project src/Api` → auto-migrates + seeds
-3. Create Supabase Auth user → test real login
-4. Test end-to-end: login → browse products → receive stock → ring sale
+Once the API is live:
+- Create a Supabase Auth user (dashboard → Authentication → Add user)
+- Test real login → Back Office → browse products → receive stock → ring a sale
 
-### Phase 1 Remaining
-- [ ] Label printing integration (Zebra/Dymo) — Phase 2 feature
-- [ ] Full offline POS testing with Expo Go on iOS
-- [ ] Integration tests with TestContainers
-- [ ] Basic reporting pages
+### Priority 2: e-Commerce Storefront
+Currently a stub. User expressed interest in viewing it. Build out:
+- Product catalog browsing
+- Product detail pages with size selection
+- Cart + checkout flow
 
-### Phase 2 (Months 4-6)
-- Full RBAC with permission-based authorization
-- Full POS features: layaway, returns, gift cards, customer attach
-- Tenant hierarchy (unlimited depth, not just root → stores)
-- Import pipeline (CSV product import)
-- Label printing
-- SendGrid email integration
-- Android POS build
+### Priority 3: Continue Phase 1 Completion
+- Integration tests with TestContainers
+- Basic reporting pages
+- Full offline POS testing via Expo Go
 
-### Phase 3 (Months 7-10)
-- e-Commerce storefront (Next.js)
-- Uniform work orders + group orders
-- AR module
-- Advanced reporting
-- Tax engine (Avalara/TaxJar)
+### Stub Modules (Future Phases)
+- Uniforms — work orders, group orders, AR
+- ECommerce — storefront config, online orders
+- Reporting — read models, report generation
+- Notifications — SendGrid email
+- Settings — tenant config UI
 
-## Key Files to Know
+## Credentials (all in gitignored files)
+
+| What | Where |
+|------|-------|
+| Supabase URL | `https://jaqibimumhdtbnnydaju.supabase.co` |
+| Supabase anon key | `frontend/backoffice/.env` |
+| Supabase JWT secret | `src/Api/appsettings.Development.json` |
+| DB password | `src/Api/appsettings.Development.json` |
+| GitHub repo | `https://github.com/jrichburg/retail-platform` |
+| Vercel live demo | `https://frontend-eight-alpha-66.vercel.app` |
+
+## Key Files Reference
 
 | Purpose | File |
 |---------|------|
-| API entry point | `src/Api/Program.cs` |
+| API entry + DI | `src/Api/Program.cs` |
 | DB context | `src/Infrastructure/Persistence/AppDbContext.cs` |
 | Tenant middleware | `src/Api/Middleware/TenantResolutionMiddleware.cs` |
 | Product entity | `src/Modules/Catalog/Domain/Entities/Product.cs` |
 | POS lookup (Dapper) | `src/Modules/Catalog/Application/Queries/LookupProduct/LookupProductQueryHandler.cs` |
 | Sale handler | `src/Modules/Sales/Application/Commands/CreateSale/CreateSaleCommandHandler.cs` |
 | Receive handler | `src/Modules/Inventory/Application/Commands/CreateReceiveDocument/CreateReceiveDocumentCommandHandler.cs` |
+| PO receive handler | `src/Modules/Inventory/Application/Commands/ReceiveAgainstPO/ReceiveAgainstPOCommandHandler.cs` |
 | Frontend demo data | `frontend/backoffice/src/lib/demo-data.ts` |
 | Frontend API client | `frontend/backoffice/src/lib/api.ts` |
 | Design system CSS | `frontend/backoffice/src/index.css` |
 | Vercel config | `frontend/vercel.json` |
+| Supabase migrations | `supabase/migrations/` |
+| Full architecture docs | `.claude/architecture.md` |
+| Backend module docs | `.claude/backend-modules.md` |
+| Frontend docs | `.claude/frontend.md` |
+| Database docs | `.claude/database.md` |
