@@ -68,9 +68,10 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:3000",  // Back Office
-                "http://localhost:3002")  // e-Commerce
+        var allowedOrigins = builder.Configuration["AllowedOrigins"]?.Split(',')
+            ?? new[] { "http://localhost:3000", "http://localhost:3002" };
+
+        policy.WithOrigins(allowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -83,17 +84,23 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Auto-migrate and seed in Development
-if (app.Environment.IsDevelopment())
+// Auto-migrate on startup (all environments)
 {
     using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<Infrastructure.Persistence.AppDbContext>();
     await db.Database.MigrateAsync();
-    await Api.Seeds.TenantSeeder.SeedAsync(db);
-    await Api.Seeds.AuthSeeder.SeedAsync(db);
-    await Api.Seeds.CatalogSeeder.SeedAsync(db);
-    await Api.Seeds.PlatformSeeder.SeedAsync(db);
 
+    if (app.Environment.IsDevelopment())
+    {
+        await Api.Seeds.TenantSeeder.SeedAsync(db);
+        await Api.Seeds.AuthSeeder.SeedAsync(db);
+        await Api.Seeds.CatalogSeeder.SeedAsync(db);
+        await Api.Seeds.PlatformSeeder.SeedAsync(db);
+    }
+}
+
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
 }
