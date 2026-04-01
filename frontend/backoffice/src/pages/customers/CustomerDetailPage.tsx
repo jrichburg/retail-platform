@@ -1,12 +1,14 @@
 import { useParams, Link } from 'react-router-dom';
 import { useCustomer } from '@/hooks/use-customers';
 import { useSales } from '@/hooks/use-sales';
-import { ArrowLeft, Mail, Phone, MapPin, Edit, Receipt } from 'lucide-react';
+import { useCustomerBalance } from '@/hooks/use-accounts-receivable';
+import { ArrowLeft, Mail, Phone, MapPin, Edit, Receipt, DollarSign, FileText } from 'lucide-react';
 
 export function CustomerDetailPage() {
   const { id } = useParams();
   const { data: customer, isLoading } = useCustomer(id || '');
   const { data: sales } = useSales();
+  const { data: arBalance } = useCustomerBalance(id || '');
 
   // Filter sales for this customer (demo mode - in real mode would pass customerId param)
   const customerSales = sales?.items.filter((s: any) => s.customerId === id) || [];
@@ -62,6 +64,46 @@ export function CustomerDetailPage() {
           <p className="text-sm text-slate-700">{customer.notes}</p>
         </div>
       )}
+
+      {/* Account Balance */}
+      <div className="card">
+        <div className="border-b border-slate-100 px-5 py-4 flex items-center justify-between">
+          <h3 className="section-label">Account Balance</h3>
+          {arBalance && arBalance.totalBalance > 0 && (
+            <Link to={`/ar/invoices?customerId=${id}`} className="text-xs font-medium text-amber-600 hover:text-amber-700">View all invoices</Link>
+          )}
+        </div>
+        {!arBalance || arBalance.totalBalance === 0 ? (
+          <div className="px-5 py-10 text-center">
+            <DollarSign className="mx-auto h-6 w-6 text-slate-300" />
+            <p className="mt-2 text-sm text-slate-400">No outstanding balance</p>
+          </div>
+        ) : (
+          <div>
+            <div className="px-5 py-4 flex items-center gap-4 border-b border-slate-50">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-wider text-slate-400">Balance Due</p>
+                <p className="text-2xl font-bold text-slate-900">${arBalance.totalBalance.toFixed(2)}</p>
+              </div>
+              <span className="text-xs text-slate-400">{arBalance.openInvoiceCount} open invoice{arBalance.openInvoiceCount !== 1 ? 's' : ''}</span>
+            </div>
+            <div className="divide-y divide-slate-50">
+              {arBalance.openInvoices.map(inv => (
+                <Link key={inv.id} to={`/ar/invoices/${inv.id}`} className="flex items-center justify-between px-5 py-3 hover:bg-slate-50/50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-4 w-4 text-slate-400" />
+                    <div>
+                      <p className="font-mono text-sm font-medium text-slate-900">{inv.invoiceNumber}</p>
+                      <p className="text-xs text-slate-400">Due {new Date(inv.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                    </div>
+                  </div>
+                  <span className="text-sm font-semibold tabular-nums text-slate-900">${inv.balanceDue.toFixed(2)}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Purchase History */}
       <div className="card">

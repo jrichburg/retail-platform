@@ -5,6 +5,7 @@ using Modules.Tenants.Application.Commands.CreateStore;
 using Modules.Tenants.Application.Commands.UpdateStore;
 using Modules.Tenants.Application.Commands.UpdateTenantSetting;
 using Modules.Tenants.Application.Queries.GetStore;
+using Modules.Tenants.Application.Queries.GetTenantSettings;
 using Modules.Tenants.Application.Queries.GetTenantTree;
 
 namespace Modules.Tenants.Controllers;
@@ -47,6 +48,13 @@ public class TenantsController : ControllerBase
     {
         var result = await _mediator.Send(new UpdateStoreCommand(id, request.Name, request.Code, request.IsActive));
         return result.IsSuccess ? NoContent() : BadRequest(new { message = result.Error });
+    }
+
+    [HttpGet("settings")]
+    public async Task<IActionResult> GetSettings([FromQuery] Guid tenantNodeId)
+    {
+        var result = await _mediator.Send(new GetTenantSettingsQuery(tenantNodeId));
+        return result.IsSuccess ? Ok(result.Value) : BadRequest(new { message = result.Error });
     }
 
     [HttpPut("settings")]

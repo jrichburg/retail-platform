@@ -24,6 +24,9 @@ Zod schemas + TypeScript interfaces shared across all frontends:
 - `inventory.ts` — StockLevel, StockTransaction, ReceiveDocument, PurchaseOrder, PurchaseOrderLine
 - `sales.ts` — Sale, SaleLineItem, SaleTender, CreateSaleSchema
 - `customer.ts` — Customer, CreateCustomerSchema
+- `transfer.ts` — TransferDocument, TransferDocumentDetail, TransferDocumentLine, TransferStatus, CreateTransferRequest
+- `work-order.ts` — WorkOrder, WorkOrderDetail, WorkOrderLine
+- `accounts-receivable.ts` — Invoice, InvoiceDetail, InvoiceLineItem, InvoicePayment
 
 ## Back Office App
 
@@ -68,12 +71,27 @@ Demo data includes: 1 user, 3 stores, 6 suppliers, 3 size grids, 8 products with
 | `/inventory/purchase-orders/:id` | PurchaseOrderDetailPage | PO detail with ordered/received/remaining |
 | `/inventory/purchase-orders/:id/edit` | PurchaseOrderFormPage | Edit draft PO |
 | `/inventory/purchase-orders/:id/receive` | ReceiveAgainstPOPage | Receive against PO with scan |
+| `/inventory/transfers` | TransfersPage | Transfer list with status filter tabs |
+| `/inventory/transfers/new` | TransferFormPage | Create transfer — destination picker, scan/manual add |
+| `/inventory/transfers/:id` | TransferDetailPage | Transfer detail with Submit/Complete/Cancel actions |
 | `/sales` | SalesPage | Transaction list |
 | `/sales/:id` | SaleDetailPage | Transaction detail with line items + tenders |
 | `/customers` | CustomersPage | Customer directory with search |
 | `/customers/new` | CustomerFormPage | Create customer |
 | `/customers/:id` | CustomerDetailPage | Customer detail + purchase history |
 | `/customers/:id/edit` | CustomerFormPage | Edit mode |
+| `/work-orders` | WorkOrdersPage | Work order list |
+| `/work-orders/new` | WorkOrderFormPage | Create work order |
+| `/work-orders/:id` | WorkOrderDetailPage | Work order detail |
+| `/ar` | ArDashboardPage | Accounts receivable overview |
+| `/ar/invoices` | InvoicesPage | Invoice list |
+| `/ar/invoices/new` | InvoiceFormPage | Create invoice |
+| `/ar/invoices/:id` | InvoiceDetailPage | Invoice detail + payment recording |
+| `/settings` | SettingsPage | Store configuration |
+| `/settings/users` | UsersPage | User management |
+| `/platform/tenants` | TenantsPage | Platform admin — all tenants list |
+| `/platform/tenants/new` | CreateTenantPage | Platform admin — create tenant + initial owner |
+| `/platform/tenants/:id` | TenantDetailPage | Platform admin — tenant detail, stores, users |
 | `/pos` | PosTransactionPage | Full-screen POS terminal |
 | `/pos/tender` | PosTenderPage | Cash/card tender with keypad |
 | `/pos/receipt` | PosReceiptPage | Sale complete confirmation |
@@ -88,11 +106,18 @@ Demo data includes: 1 user, 3 stores, 6 suppliers, 3 size grids, 8 products with
 - `use-purchase-orders.ts` — usePurchaseOrders, usePurchaseOrder, useCreatePurchaseOrder, useUpdatePurchaseOrder, useSubmitPurchaseOrder, useClosePurchaseOrder
 - `use-sales.ts` — useSales, useSale
 - `use-customers.ts` — useCustomers, useCustomer, useCreateCustomer, useUpdateCustomer
+- `use-work-orders.ts` — useWorkOrders, useWorkOrder, useCreateWorkOrder, useUpdateWorkOrder
+- `use-accounts-receivable.ts` — useInvoices, useInvoice, useCreateInvoice, useCustomerBalance
+- `use-transfers.ts` — useTransfers, useTransfer, useCreateTransfer, useSubmitTransfer, useCompleteTransfer, useCancelTransfer
+- `use-users.ts` — useUsers, useCreateUser, useUpdateUser, useAssignRole
+- `use-settings.ts` — useSettings, useUpdateSetting
+- `use-platform.ts` — useTenants, useTenantDetail, useCreateTenant, useDeactivateTenant
 
 ### Zustand Stores (`/stores/`)
 - `auth-store.ts` — user, isAuthenticated, login/logout/syncUser/loadUser
 - `tenant-store.ts` — nodes, currentStoreId, loadTree/selectStore
 - `receive-document-store.ts` — multi-line receiving accumulator (addLine, updateQuantity, removeLine)
+- `transfer-document-store.ts` — multi-line transfer accumulator with destinationTenantNodeId (addLine, updateQuantity, removeLine, setDestination)
 
 ## POS App (React Native)
 

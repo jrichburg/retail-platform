@@ -5,3 +5,6 @@ export * from './catalog';
 export * from './inventory';
 export * from './sales';
 export * from './customer';
+export * from './work-order';
+export * from './accounts-receivable';
+export * from './transfer';

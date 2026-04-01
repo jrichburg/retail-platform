@@ -29,6 +29,13 @@ public class TenantResolutionMiddleware
             return;
         }
 
+        // Skip for platform admin endpoints (cross-tenant)
+        if (path.StartsWith("/api/v1/platform/"))
+        {
+            await _next(context);
+            return;
+        }
+
         // Try header first, then JWT claim
         string? tenantNodeIdStr = context.Request.Headers["X-Tenant-Node-Id"].FirstOrDefault();
 

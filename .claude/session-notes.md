@@ -1,88 +1,91 @@
 # Session Notes
 
-Last updated: 2026-03-31
+Last updated: 2026-04-01
 
 ## Session 1 Summary (2026-03-25 through 2026-03-31)
 
 Built the entire retail platform from scratch in one session. Everything is committed and pushed to GitHub.
 
-### What Was Built
+See original session 1 notes in git history (commit 6cc0439).
 
-**Backend (269 C# files, 11 migrations)**
-1. Project scaffolding — .NET 8 solution, 16 projects, modular monolith
-2. SharedKernel — CQRS abstractions, Result<T>, ValidationBehavior, tenant/user context
-3. Infrastructure — AppDbContext with global tenant filters, Dapper, Redis, Fullsteam payments
-4. Auth module — Supabase JWT verification, RBAC (3 roles, 18 permissions), user sync
-5. Tenants module — TenantNode hierarchy (ltree), TenantSetting (JSONB + locks)
-6. Catalog module — Products with variants (size grids), suppliers, departments, Dapper UPC lookup
-7. Inventory module — Stock levels/transactions, blind receiving, purchase orders (full lifecycle), receive against PO
-8. Sales module — Full POS transaction with tax calc, inventory decrement, Fullsteam payments, offline idempotency
-9. Customers module — Customer directory CRUD, linked to sales
+## Session 2 Summary (2026-04-01)
 
-**Frontend (48 TSX/TS files in backoffice, 8 shared type files)**
-1. Back Office — "Warm Industrial" design (DM Sans + Instrument Serif + amber accents)
-2. All pages: Dashboard, Products (filter-first), Departments, Suppliers, Size Grids, Stock Levels, Receiving (multi-line scan), Purchase Orders (status workflow), Receive Against PO, Sales, Customers
-3. POS web preview at /pos — transaction, tender (cash/card keypad), receipt screens
-4. POS native app (Expo) — offline SQLite, sync service, transaction flow
-5. Demo mode with comprehensive sample data
-6. Deployed to Vercel: https://frontend-eight-alpha-66.vercel.app
+Built three major features on top of the Phase 1 foundation:
 
-**Database**
-- Supabase project configured (PostgreSQL)
-- All 11 migrations applied via `supabase db push`
-- Seed data applied (tenant, roles, permissions, suppliers, departments, products)
+### 1. Platform SuperAdmin Module (`src/Modules/Platform/`)
+- `PlatformAdmin` entity — non-tenant-scoped, identifies platform operators by Supabase user ID
+- `[RequirePlatformAdmin]` authorization attribute — custom `IAsyncAuthorizationFilter` checking JWT `sub` against `platform_admins` table
+- `TenantResolutionMiddleware` updated to bypass `/api/v1/platform/*`
+- **Endpoints**: `GET/POST /api/v1/platform/tenants`, `GET /{id}`, `PUT /{id}/deactivate`
+- `CreateTenantCommand` — all-in-one: root TenantNode + default store + settings + initial owner AppUser in one transaction
+- `PlatformSeeder` bootstraps a demo admin on startup
+- Migration: `AddPlatformAdmins` (`platform_admins` table)
+- **Frontend**: `/platform/tenants` (list), `/platform/tenants/new` (create form), `/platform/tenants/:id` (detail with stores + users + deactivate)
+- Sidebar "Platform" section with amber accent
+
+### 2. Inter-Store Transfer Module (within `src/Modules/Inventory/`)
+- `TransferDocument` + `TransferDocumentLine` entities
+- Full state machine: `draft` → `in_transit` → `completed` (or `cancelled`)
+- Stock validation before submit — per-item error messages with available quantities
+- `transfer_out` / `transfer_in` / `transfer_cancelled` transaction types for full audit trail
+- Cross-store stock access works because both stores share `RootTenantId` (no `IgnoreQueryFilters()` needed for stock, but used for `TenantNode` name resolution)
+- `Modules.Inventory.csproj` now references `Modules.Tenants` for store name lookups
+- Migration: `AddTransferDocuments` (`transfer_documents` + `transfer_document_lines`)
+- **Frontend**: `/inventory/transfers` (list with status tabs), `/inventory/transfers/new` (destination picker + scan/manual add), `/inventory/transfers/:id` (detail with inline confirmation dialogs)
+
+### 3. Additional modules completed (built earlier in session, now documented):
+- **Uniforms module**: Work order scaffolding (entities + persistence), no endpoints yet
+- **AccountsReceivable module**: Invoice CRUD + payment recording + customer balance
+- **Auth module extensions**: User management endpoints (create, update, assign role, list)
+- **Work Orders frontend**: Full CRUD pages
+- **AR frontend**: Dashboard + invoice list/detail/create
 
 ### Current State
 
 **Working:**
-- All code compiles (`dotnet build` — 0 errors, 0 warnings)
+- All code compiles (`dotnet build` — 0 errors)
 - Frontend builds and deploys to Vercel with demo mode
-- GitHub repo fully up to date: https://github.com/jrichburg/retail-platform
-- Supabase database has all tables + seed data
+- GitHub: `https://github.com/jrichburg/retail-platform`
+- Vercel live demo: `https://frontend-eight-alpha-66.vercel.app`
+- All migrations generated (not yet applied to Supabase — API still not connected to cloud DB)
 
 **NOT working yet:**
-- .NET API cannot connect to Supabase (IPv6-only, local network doesn't support it)
-- No API hosting set up (discussed Railway vs Azure — decision deferred)
-- No real Supabase Auth user created (demo mode only)
-- No end-to-end testing with live API
+- .NET API cannot connect to Supabase (IPv6-only issue, local dev)
+- No API hosting (Railway vs Azure decision still pending)
+- No real Supabase Auth users (demo mode only)
 
-### Decisions Made
-- **Size grids**: Reusable templates, flexible 1D/2D dimensions
-- **Supplier**: Vendor/brand, managed list
-- **Product model**: Product = style level, ProductVariant = sellable unit (size/width/UPC)
-- **Receiving**: Multi-line documents, scan resolves to variant level
-- **PO workflow**: draft → submitted → partially_received → fully_received → closed
-- **API hosting**: Discussed Railway ($5/month) vs Azure vs eliminating .NET for Supabase Edge Functions — **decision deferred to next session**
+### Decisions Made This Session
+- Platform admins are a separate non-tenant-scoped entity (not a role within tenant RBAC)
+- Transfer document number prefix: `TRF-YYYYMMDD-NNN`
+- Transfer submit decrements stock atomically (no separate "reserved" step)
+- CreateTenant is all-in-one (tenant + store + settings + owner) for simplest onboarding
 
 ## For Next Session — Start Here
 
 ### Priority 1: Get the API Running
-The main blocker is connecting the .NET API to Supabase. Options:
-1. **Enable Supabase IPv4 add-on** ($4/month) → API can connect directly
-2. **Deploy API to Railway** (~$5/month) → Railway has IPv6 support, API connects from cloud
-3. **Rewrite to Supabase Edge Functions** → Eliminates .NET, major effort
+Same blocker as session 1. Options:
+1. **Enable Supabase IPv4 add-on** ($4/month) → direct connection
+2. **Deploy API to Railway** (~$5/month) → cloud-to-cloud connection
 
-Once the API is live:
-- Create a Supabase Auth user (dashboard → Authentication → Add user)
-- Test real login → Back Office → browse products → receive stock → ring a sale
+Once live: apply all pending migrations (`supabase db push` or `dotnet ef database update`), create Supabase Auth users, test end-to-end.
 
-### Priority 2: e-Commerce Storefront
-Currently a stub. User expressed interest in viewing it. Build out:
-- Product catalog browsing
-- Product detail pages with size selection
-- Cart + checkout flow
+### Priority 2: Apply Pending Migrations
+New migrations since last Supabase push:
+- `20260331135444_AddWorkOrders`
+- `20260331141024_AddAccountsReceivable`
+- `20260401134947_AddPlatformAdmins`
+- `20260401154002_AddTransferDocuments`
 
-### Priority 3: Continue Phase 1 Completion
-- Integration tests with TestContainers
-- Basic reporting pages
-- Full offline POS testing via Expo Go
+Run: `supabase db push` (or via Railway once API is deployed)
 
-### Stub Modules (Future Phases)
-- Uniforms — work orders, group orders, AR
-- ECommerce — storefront config, online orders
-- Reporting — read models, report generation
-- Notifications — SendGrid email
-- Settings — tenant config UI
+### Priority 3: e-Commerce Storefront
+Currently a stub. Product catalog browsing, detail pages, cart + checkout.
+
+### Priority 4: Complete Uniforms Module
+Work order endpoints, group orders, AR integration for uniform accounts.
+
+### Priority 5: Reporting
+Read models, dashboard charts with real data.
 
 ## Credentials (all in gitignored files)
 
@@ -100,18 +103,16 @@ Currently a stub. User expressed interest in viewing it. Build out:
 | Purpose | File |
 |---------|------|
 | API entry + DI | `src/Api/Program.cs` |
-| DB context | `src/Infrastructure/Persistence/AppDbContext.cs` |
+| DB context + tenant filter | `src/Infrastructure/Persistence/AppDbContext.cs` |
 | Tenant middleware | `src/Api/Middleware/TenantResolutionMiddleware.cs` |
-| Product entity | `src/Modules/Catalog/Domain/Entities/Product.cs` |
-| POS lookup (Dapper) | `src/Modules/Catalog/Application/Queries/LookupProduct/LookupProductQueryHandler.cs` |
+| Platform admin auth | `src/Modules/Platform/Application/Authorization/RequirePlatformAdminAttribute.cs` |
+| Transfer state machine (submit) | `src/Modules/Inventory/Application/Commands/SubmitTransfer/SubmitTransferCommandHandler.cs` |
+| Transfer state machine (complete) | `src/Modules/Inventory/Application/Commands/CompleteTransfer/CompleteTransferCommandHandler.cs` |
 | Sale handler | `src/Modules/Sales/Application/Commands/CreateSale/CreateSaleCommandHandler.cs` |
 | Receive handler | `src/Modules/Inventory/Application/Commands/CreateReceiveDocument/CreateReceiveDocumentCommandHandler.cs` |
-| PO receive handler | `src/Modules/Inventory/Application/Commands/ReceiveAgainstPO/ReceiveAgainstPOCommandHandler.cs` |
 | Frontend demo data | `frontend/backoffice/src/lib/demo-data.ts` |
 | Frontend API client | `frontend/backoffice/src/lib/api.ts` |
-| Design system CSS | `frontend/backoffice/src/index.css` |
-| Vercel config | `frontend/vercel.json` |
-| Supabase migrations | `supabase/migrations/` |
+| Tenant store (stores list) | `frontend/backoffice/src/stores/tenant-store.ts` |
 | Full architecture docs | `.claude/architecture.md` |
 | Backend module docs | `.claude/backend-modules.md` |
 | Frontend docs | `.claude/frontend.md` |

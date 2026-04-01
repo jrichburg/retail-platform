@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SharedKernel\SharedKernel.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Tenants\Modules.Tenants.csproj" />
   </ItemGroup>
 
   <ItemGroup>

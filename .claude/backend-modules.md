@@ -81,8 +81,70 @@ TransactionNumber (auto-generated), TransactionDate, Status, Subtotal, TaxRate, 
 **Endpoints**: `GET/POST/PUT /api/v1/customers`, `GET /{id}`
 **Sales linkage**: Sale has optional CustomerId + CustomerName
 
+## Transfers Module
+**Status**: Complete
+**Entities**: TransferDocument (TenantScopedEntity + IAuditableEntity), TransferDocumentLine (BaseEntity)
+**Endpoints**: `GET/POST /api/v1/inventory/transfers`, `GET /{id}`, `POST /{id}/submit`, `POST /{id}/complete`, `POST /{id}/cancel`
+
+### Workflow
+`draft` → `in_transit` → `completed` (or `cancelled` from draft/in_transit)
+
+| Status | Stock Effect |
+|--------|-------------|
+| draft | None — lines recorded only |
+| in_transit | Source stock decremented, `transfer_out` transactions created |
+| completed | Destination stock upserted, `transfer_in` transactions created |
+| cancelled (from in_transit) | Source stock restored, `transfer_cancelled` transactions created |
+
+### Document Number
+`TRF-YYYYMMDD-NNN` — sequential per source store per day
+
+### Cross-Store Stock Access
+Both stores share the same `RootTenantId`, so the global EF query filter doesn't block cross-store access. Handlers use explicit `TenantNodeId` values from the document (not `ITenantContext`) for all stock operations.
+
+### Notes
+- `TransferDocument.TenantNodeId` = source store (for scoping and list queries)
+- `SourceTenantNodeId` mirrors `TenantNodeId` explicitly for clarity
+- Submit validates stock availability before any changes; returns per-item error messages
+- `Modules.Inventory.csproj` references `Modules.Tenants` for `TenantNode` store name resolution
+
+## Platform Module
+**Status**: Complete
+**Entities**: PlatformAdmin (BaseEntity — NOT tenant-scoped)
+**Endpoints**: `GET/POST /api/v1/platform/tenants`, `GET /{id}`, `PUT /{id}/deactivate`
+
+### Authorization
+`[RequirePlatformAdmin]` attribute — custom `IAsyncAuthorizationFilter` that checks the JWT `sub` claim against the `platform_admins` table. Returns 403 if not found.
+
+### Tenant Resolution Bypass
+`TenantResolutionMiddleware` skips `/api/v1/platform/*` paths (same pattern as `/api/v1/auth/*`).
+
+### CreateTenant
+Creates root `TenantNode` + default store + default `TenantSettings` (tax_rate, currency, receipt_footer) + initial owner `AppUser` in a single transaction. All queries use `IgnoreQueryFilters()` since this is cross-tenant.
+
+### Bootstrapping
+`PlatformSeeder` (in `src/Api/Seeds/`) creates a demo platform admin record on startup in Development. Production: manual DB insert or promote via admin tooling.
+
+## Auth Module — Additional Endpoints
+**Status**: Extended (beyond original)
+**New endpoints**: `GET /api/v1/auth/users`, `POST /api/v1/auth/users`, `PUT /api/v1/auth/users/{id}`, `PUT /api/v1/auth/users/{id}/role`, `GET /api/v1/auth/roles`
+**New DTOs**: `AppUserListDto`
+**New Commands**: `CreateUserCommand`, `UpdateUserCommand`, `AssignRoleCommand`
+**New Queries**: `GetUsersQuery`, `GetRolesQuery`
+
+## Uniforms Module
+**Status**: Stub scaffolded — domain entities + persistence config in place, no endpoints yet
+**Entities**: WorkOrder, WorkOrderLine
+**Tables**: `work_orders`, `work_order_lines` (migrated)
+**Planned**: Work order CRUD, group orders, AR integration
+
+## AccountsReceivable Module
+**Status**: Core complete
+**Entities**: Invoice (TenantScopedEntity), InvoiceLineItem (BaseEntity), InvoicePayment (BaseEntity)
+**Tables**: `invoices`, `invoice_line_items`, `invoice_payments` (migrated)
+**Endpoints**: Accounts receivable CRUD — invoice list/detail, create invoice, record payments, customer balance
+
 ## Stub Modules (not yet implemented)
-- **Uniforms**: Work orders, group orders, AR
 - **ECommerce**: Storefront configuration, online orders
 - **Reporting**: Read models, report generation
 - **Notifications**: Email (SendGrid), SMS, in-app

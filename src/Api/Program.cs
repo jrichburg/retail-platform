@@ -92,6 +92,7 @@ if (app.Environment.IsDevelopment())
     await Api.Seeds.TenantSeeder.SeedAsync(db);
     await Api.Seeds.AuthSeeder.SeedAsync(db);
     await Api.Seeds.CatalogSeeder.SeedAsync(db);
+    await Api.Seeds.PlatformSeeder.SeedAsync(db);
 
     app.UseSwagger();
     app.UseSwaggerUI();

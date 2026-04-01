@@ -26,10 +26,12 @@
     <ProjectReference Include="..\Modules\Sales\Modules.Sales.csproj" />
     <ProjectReference Include="..\Modules\Customers\Modules.Customers.csproj" />
     <ProjectReference Include="..\Modules\Uniforms\Modules.Uniforms.csproj" />
+    <ProjectReference Include="..\Modules\AccountsReceivable\Modules.AccountsReceivable.csproj" />
     <ProjectReference Include="..\Modules\ECommerce\Modules.ECommerce.csproj" />
     <ProjectReference Include="..\Modules\Reporting\Modules.Reporting.csproj" />
     <ProjectReference Include="..\Modules\Notifications\Modules.Notifications.csproj" />
     <ProjectReference Include="..\Modules\Settings\Modules.Settings.csproj" />
+    <ProjectReference Include="..\Modules\Platform\Modules.Platform.csproj" />
   </ItemGroup>
 
 </Project>
